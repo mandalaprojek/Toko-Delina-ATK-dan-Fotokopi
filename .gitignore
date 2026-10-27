@@ -1,0 +1,26 @@
+# =====================================================================
+# KEAMANAN DATA & KREDENSIAL (JANGAN PERNAH DI-PUSH KE GITHUB)
+# =====================================================================
+.env
+.env.*
+.clasp.json
+.clasprc.json
+*credentials*.json
+*secret*
+*token*
+*.key
+*.pem
+
+# Dokumen Spesifikasi Internal & Strategi Bisnis (Tetap Aman di Lokal)
+PRD_*.md
+DESIGNnew.md
+
+# Folder Dependensi & Log Sistem
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Toko Delina ATK & Fotokopi — Kiko Smart Stationery</title>
+  <meta name="description" content="Kiko POS & Smart Shop v2.1: Toko ATK & Fotokopi Syariah Modern di Tanjung Raja, Ogan Ilir. Jadwal Sholat, Cuaca, Dzikir Al-Matsurat, Asisten AI Kiko, & POS Hybrid.">
+  <meta name="theme-color" content="#0A5C36">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="assets/kiko_mascot.jpg">
+
+  <!-- Icons (FontAwesome 6.5 CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Chart.js CDN for Owner Super Admin Dashboard -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Main Design System Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       0. HALAMAN LOGIN & PORTAL AUTENTIKASI 4 TINGKAT (RBAC GATEWAY - PRD 3.2)
+       Dapat dibuka kapan saja dari bilah atas atau menu Akun
+       ========================================================================= -->
+  <div class="auth-gateway-overlay" id="authGatewayModal">
+    <div class="auth-gateway-card">
+      <!-- Islamic Hero Banner -->
+      <div class="auth-hero-banner">
+        <div class="auth-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+        <div class="auth-logo-row">
+          <img src="assets/logo.jpg" alt="Logo Toko Delina" class="auth-logo-img" id="authStoreLogo">
+          <img src="assets/kiko_mascot.jpg" alt="Robot Kiko Berpeci" class="auth-mascot-img">
+        </div>
+        <div class="auth-store-title" id="authStoreName">Toko Delina ATK & Fotokopi</div>
+        <div class="auth-store-sub" id="authStoreTagline">Kiko Smart Stationery • Jl. Lintas Sumatera, Tanjung Raja, Ogan Ilir</div>
+      </div>
+
+      <!-- 4 Tingkat Autentikasi Tabs -->
+      <div class="auth-tier-tabs">
+        <button type="button" class="auth-tier-tab" data-tier="1">
+          <i class="fa-solid fa-store"></i>
+          <span>1. Publik</span>
+        </button>
+        <button type="button" class="auth-tier-tab active" data-tier="2">
+          <i class="fa-solid fa-building-columns"></i>
+          <span>2. Member/SPJ</span>
+        </button>
+        <button type="button" class="auth-tier-tab" data-tier="3">
+          <i class="fa-solid fa-cash-register"></i>
+          <span>3. Kasir POS</span>
+        </button>
+        <button type="button" class="auth-tier-tab" data-tier="4">
+          <i class="fa-solid fa-crown"></i>
+          <span>4. Owner</span>
+        </button>
+      </div>
+
+      <!-- Auth Forms Body -->
+      <div class="auth-body-panel">
+
+        <!-- TINGKAT 1: PUBLIK UMUM (TANPA LOGIN) -->
+        <div class="auth-tier-pane" id="authPaneTier1">
+          <div class="dzikir-mandate-alert">
+            <i class="fa-solid fa-earth-asia text-emerald"></i>
+            <span><strong>Tingkat 1 — Publik Umum (Tanpa Login):</strong> Akses langsung Etalase Tokopedia Mobile, Portal Harian Ogan Ilir, & Chat Kiko.</span>
+          </div>
+          <div style="margin-bottom:10px;">
+            <label style="font-size:0.72rem; font-weight:700; display:block; margin-bottom:4px;">Nama Anda (Opsional untuk Checkout Tamu)</label>
+            <input type="text" class="search-input" id="loginGuestName" value="Warga Tanjung Raja" style="padding:8px 12px;">
+          </div>
+          <button type="button" class="btn-sheet-add-cart" id="btnLoginTier1" style="width:100%; height:44px;">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Masuk Tanpa Login (Guest Mode)
+          </button>
+        </div>
+
+        <!-- TINGKAT 2: MEMBER REGULER & PERWAKILAN INSTANSI SPJ -->
+        <div class="auth-tier-pane active" id="authPaneTier2">
+          <div class="dzikir-mandate-alert">
+            <i class="fa-solid fa-id-card-clip text-gold"></i>
+            <span><strong>Tingkat 2 — Member & Mitra Instansi:</strong> Login via Nomor WhatsApp atau ID Telegram untuk Loyalty 15x & Nota SPJ.</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+            <div>
+              <label style="font-size:0.72rem; font-weight:700; display:block; margin-bottom:3px;">Nomor WhatsApp / ID Telegram</label>
+              <input type="text" class="search-input" id="loginMemberWa" value="0812-7890-8812" placeholder="Contoh: 081278908812 atau @nurjanah_sdn01" style="padding:8px 12px;">
+            </div>
+            <div>
+              <label style="font-size:0.72rem; font-weight:700; display:block; margin-bottom:3px;">Pilih Profil Akun</label>
+              <select class="search-input" id="loginMemberProfile" style="padding:8px 12px;">
+                <option value="instansi" selected>Dra. Hj. Nurjanah, M.Pd — Bendahara SDN 01 Tanjung Raja (Mitra SPJ)</option>
+                <option value="desa">Budi Santoso — Sekdes Tanjung Raja Selatan (Mitra SPJ Desa)</option>
+                <option value="member">M. Ridho Pratama — Mahasiswa Unsri (Member Reguler Loyalty)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.72rem; font-weight:700; display:block; margin-bottom:3px;">PIN Member / Kode OTP WA</label>
+              <input type="password" class="search-input" id="loginMemberOtp" value="1234" style="padding:8px 12px;">
+            </div>
+          </div>
+          <button type="button" class="btn-sheet-add-cart" id="btnLoginTier2" style="width:100%; height:44px;">
+            <i class="fa-brands fa-whatsapp"></i> Masuk sebagai Member / Instansi SPJ
+          </button>
+        </div>
+
+        <!-- TINGKAT 3: KASIR & OPERATOR FOTOKOPI (PIN 6 DIGIT) -->
+        <div class="auth-tier-pane" id="authPaneTier3">
+          <div class="dzikir-mandate-alert">
+            <i class="fa-solid fa-user-check text-emerald"></i>
+            <span><strong>Tingkat 3 — Kasir & Operator:</strong> Login Cepat ID Staf + PIN 6 Digit. (Hak akses dibatasi: dilarang ubah HPP/harga & dilarang void transaksi).</span>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+            <div>
+              <label style="font-size:0.7rem; font-weight:700;">ID Staf / Operator</label>
+              <input type="text" class="search-input" id="loginKasirId" value="KSR-01 (Ahmad)" style="padding:7px 10px;">
+            </div>
+            <div>
+              <label style="font-size:0.7rem; font-weight:700;">PIN 6 Digit (Default: 123456)</label>
+              <input type="password" class="search-input" id="loginKasirPin" value="123456" maxlength="6" style="padding:7px 10px; font-family:var(--font-mono); font-weight:800; letter-spacing:3px; text-align:center;">
+            </div>
+          </div>
+          <!-- Touch Keypad for POS Cashier -->
+          <div class="pin-keypad-grid" id="kasirPinKeypad">
+            <button type="button" class="pin-key-btn" data-key="1">1</button>
+            <button type="button" class="pin-key-btn" data-key="2">2</button>
+            <button type="button" class="pin-key-btn" data-key="3">3</button>
+            <button type="button" class="pin-key-btn" data-key="4">4</button>
+            <button type="button" class="pin-key-btn" data-key="5">5</button>
+            <button type="button" class="pin-key-btn" data-key="6">6</button>
+            <button type="button" class="pin-key-btn" data-key="7">7</button>
+            <button type="button" class="pin-key-btn" data-key="8">8</button>
+            <button type="button" class="pin-key-btn" data-key="9">9</button>
+            <button type="button" class="pin-key-btn" data-key="C" style="color:var(--danger);">CLR</button>
+            <button type="button" class="pin-key-btn" data-key="0">0</button>
+            <button type="button" class="pin-key-btn" data-key="123456" style="font-size:0.7rem; background:#ecfdf5; color:var(--primary);">Isi Otomatis</button>
+          </div>
+          <button type="button" class="btn-sheet-add-cart" id="btnLoginTier3" style="width:100%; height:44px;">
+            <i class="fa-solid fa-cash-register"></i> Buka Terminal POS Kasir & Fotokopi
+          </button>
+        </div>
+
+        <!-- TINGKAT 4: OWNER / SUPER ADMIN (KEAMANAN GANDA + ALERT TELEGRAM) -->
+        <div class="auth-tier-pane" id="authPaneTier4">
+          <div class="dzikir-mandate-alert" style="background:#fefce8; border-left-color:var(--gold); color:#854d0e;">
+            <i class="fa-solid fa-shield-halved text-gold"></i>
+            <span><strong>Tingkat 4 — Owner / Super Admin:</strong> Keamanan Ganda Akun Google Aktif + Master PIN + Notifikasi Keamanan Otomatis ke Telegram Pribadi Owner.</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+            <div>
+              <label style="font-size:0.72rem; font-weight:700; display:block; margin-bottom:3px;">Akun Google Owner (`Session.getActiveUser()`)</label>
+              <input type="email" class="search-input" id="loginOwnerEmail" value="tokodelina.tanjungraja@gmail.com" style="padding:8px 12px;">
+            </div>
+            <div>
+              <label style="font-size:0.72rem; font-weight:700; display:block; margin-bottom:3px;">Master PIN Khusus Owner (Default: 999888)</label>
+              <input type="password" class="search-input" id="loginOwnerPin" value="999888" style="padding:8px 12px; font-family:var(--font-mono); font-weight:800; letter-spacing:3px;">
+            </div>
+          </div>
+          <button type="button" class="btn-spj-download" id="btnLoginTier4" style="width:100%; height:44px; font-size:0.84rem;">
+            <i class="fa-solid fa-crown"></i> Verifikasi Owner & Buka Dashboard Utama
+          </button>
+        </div>
+
+        <div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--surface-border); display:flex; justify-content:space-between; align-items:center; font-size:0.68rem; color:var(--slate-muted);">
+          <span><i class="fa-solid fa-lock text-emerald"></i> Terintegrasi GAS RBAC 4 Tingkat</span>
+          <button type="button" id="btnCloseAuthModal" style="background:none; border:none; color:var(--primary); font-weight:700; cursor:pointer;">
+            Lanjut ke Aplikasi Utama <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       MAIN MOBILE-FIRST APPLICATION CONTAINER
+       ========================================================================= -->
+  <div class="app-container" id="appRoot">
+
+    <!-- Top Session & Role Switcher Bar (Memudahkan perpindahan Halaman Login & 4 Role RBAC) -->
+    <div class="rbac-session-bar">
+      <div class="rbac-session-left">
+        <span class="rbac-tier-pill" id="activeRbacBadge">Tingkat 2 • Instansi SPJ</span>
+        <span id="activeSessionUserText" style="overflow:hidden; text-overflow:ellipsis;">Dra. Hj. Nurjanah (SDN 01)</span>
+      </div>
+      <div style="display:flex; gap:5px; flex-shrink:0;">
+        <button type="button" class="btn-switch-login" id="btnOpenLoginGateway" title="Buka Halaman Login 4 Tingkat RBAC">
+          <i class="fa-solid fa-key"></i> Halaman Login / Ganti Akses
+        </button>
+      </div>
+    </div>
+
+    <!-- =======================================================================
+         1. DUAL STICKY HEADER (WAJIB UTUH SESUAI GAMBAR & PRD v2.1)
+         ======================================================================= -->
+    <header class="sticky-header-wrapper" id="stickyHeader">
+
+      <!-- HEADER 1: Portal Harian Komunitas Warga Ogan Ilir -->
+      <div class="header-portal" id="headerPortal">
+        <!-- Baris Atas: Logo & Nama Toko Dinamis (CMS) + Jam Digital Real-Time -->
+        <div class="portal-top-row">
+          <a href="#viewHome" class="store-branding" id="storeBrandingLink" title="Toko Delina ATK & Fotokopi">
+            <div class="store-logo-wrapper">
+              <img src="assets/logo.jpg" alt="Logo Toko Delina" class="store-logo-img" id="dynamicStoreLogo">
+            </div>
+            <div class="store-info-text">
+              <span class="store-title" id="dynamicStoreName">
+                Toko Delina ATK & Fotokopi <i class="fa-solid fa-circle-check text-gold" style="font-size:0.75rem;"></i>
+              </span>
+              <span class="store-tagline" id="dynamicStoreTagline">
+                Kiko Smart Stationery • Tanjung Raja
+              </span>
+            </div>
+          </a>
+
+          <!-- Jam Digital Modern Real-Time WIB + Sakelar Dark Mode Syariah -->
+          <div style="display:flex; align-items:center; gap:6px;">
+            <button type="button" id="btnToggleDarkMode" title="Aktifkan Mode Malam / Siang (Dark Mode Syariah)" style="background:rgba(0,0,0,0.35); border:1.5px solid var(--gold); color:#fef08a; width:34px; height:34px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.9rem; transition:var(--transition);">
+              <i class="fa-solid fa-moon" id="darkModeIcon"></i>
+            </button>
+            <div class="digital-clock-box" id="digitalClockBox">
+              <div class="clock-time" id="clockTimeDisplay">
+                <i class="fa-regular fa-clock" style="font-size:0.7rem;"></i> 00:00:00 WIB
+              </div>
+              <div class="clock-date" id="clockDateDisplay">
+                Selasa, 27 Okt 2026
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Baris Kedua: 3 Dropdown Lengkap (Jadwal Sholat + Azan, Cuaca/AQI, Dzikir Al-Ma'tsurat) -->
+        <div class="portal-pills-row">
+          <!-- Dropdown 1: Jadwal Sholat Ogan Ilir + Countdown + Auto-Audio Azan -->
+          <button type="button" class="portal-pill-btn" id="btnPillSholat">
+            <i class="fa-solid fa-mosque"></i>
+            <span id="pillSholatLabel">Sholat: Maghrib</span>
+            <span class="badge-pulse"></span>
+          </button>
+
+          <!-- Dropdown 2: Cuaca & Kualitas Udara (AQI) Tanjung Raja -->
+          <button type="button" class="portal-pill-btn" id="btnPillCuaca">
+            <i class="fa-solid fa-cloud-sun"></i>
+            <span id="pillCuacaLabel">31°C • AQI 42</span>
+          </button>
+
+          <!-- Dropdown 3: Dzikir Pagi/Petang Al-Ma'tsurat (almatsurat.com) -->
+          <button type="button" class="portal-pill-btn" id="btnPillDzikir">
+            <i class="fa-solid fa-book-quran"></i>
+            <span>Al-Ma'tsurat</span>
+          </button>
+        </div>
+
+        <!-- OVERLAY DROPDOWN 1: Jadwal Sholat Ogan Ilir, Countdown, & Auto-Audio Azan -->
+        <div class="portal-dropdown-content" id="dropdownSholatContent">
+          <div class="dropdown-header-bar">
+            <span class="dropdown-title">
+              <i class="fa-solid fa-kaaba text-emerald"></i> Jadwal Sholat Tanjung Raja, Kab. Ogan Ilir
+            </span>
+            <button type="button" class="dropdown-close-btn" data-close="dropdownSholatContent">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <!-- Countdown Timer Menuju Sholat Berikutnya -->
+          <div class="sholat-countdown-banner">
+            <div>
+              <div class="countdown-label">Countdown Menuju Waktu Sholat Berikutnya</div>
+              <div class="countdown-next-prayer" id="nextPrayerName">Subuh (04:28 WIB)</div>
+            </div>
+            <div class="countdown-timer-value" id="sholatCountdownTimer">-00:42:15</div>
+          </div>
+
+          <!-- Grid 7 Waktu Lengkap (Termasuk Imsak & Terbit) -->
+          <div class="sholat-grid">
+            <div class="sholat-cell" id="cell-imsak">
+              <div class="sholat-name">Imsak</div>
+              <div class="sholat-time" id="time-imsak">04:18</div>
+            </div>
+            <div class="sholat-cell" id="cell-subuh">
+              <div class="sholat-name">Subuh</div>
+              <div class="sholat-time" id="time-subuh">04:28</div>
+            </div>
+            <div class="sholat-cell" id="cell-terbit">
+              <div class="sholat-name">Terbit</div>
+              <div class="sholat-time" id="time-terbit">05:43</div>
+            </div>
+            <div class="sholat-cell" id="cell-dzuhur">
+              <div class="sholat-name">Dzuhur</div>
+              <div class="sholat-time" id="time-dzuhur">11:54</div>
+            </div>
+            <div class="sholat-cell" id="cell-ashar">
+              <div class="sholat-name">Ashar</div>
+              <div class="sholat-time" id="time-ashar">15:12</div>
+            </div>
+            <div class="sholat-cell" id="cell-maghrib">
+              <div class="sholat-name">Maghrib</div>
+              <div class="sholat-time" id="time-maghrib">18:01</div>
+            </div>
+            <div class="sholat-cell" id="cell-isya">
+              <div class="sholat-name">Isya</div>
+              <div class="sholat-time" id="time-isya">19:12</div>
+            </div>
+            <div class="sholat-cell" style="background:#fefce8; border-color:#fef08a;">
+              <div class="sholat-name" style="color:#854d0e;">Zona</div>
+              <div class="sholat-time" style="color:#b45309;">WIB</div>
+            </div>
+          </div>
+
+          <!-- Auto-Audio Azan Sungguhan Controller -->
+          <div class="audio-azan-panel">
+            <div>
+              <div style="font-weight:700;"><i class="fa-solid fa-volume-high text-gold"></i> Auto-Audio Suara Azan Ogan Ilir</div>
+              <div style="font-size:0.65rem; color:#713f12;" id="azanStatusText">Otomatis memutar suara azan saat waktu sholat tiba</div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button type="button" class="azan-toggle-btn" id="btnTestAzan">
+                <i class="fa-solid fa-play"></i> Putar Azan
+              </button>
+              <button type="button" class="azan-toggle-btn" id="btnMuteAzan" style="background:#475569;">
+                <i class="fa-solid fa-bell"></i> Auto: Aktif
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- OVERLAY DROPDOWN 2: Cuaca & Kualitas Udara (AQI) Tanjung Raja -->
+        <div class="portal-dropdown-content" id="dropdownCuacaContent">
+          <div class="dropdown-header-bar">
+            <span class="dropdown-title">
+              <i class="fa-solid fa-cloud-sun-rain text-info"></i> Pantauan Cuaca & AQI Tanjung Raja, Ogan Ilir
+            </span>
+            <button type="button" class="dropdown-close-btn" data-close="dropdownCuacaContent">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="weather-hero-row">
+            <div>
+              <div class="weather-temp" id="weatherTemp">31°C</div>
+              <div class="weather-city">Jl. Lintas Sumatera, Tanjung Raja (-3.34°, 104.77°)</div>
+              <div style="font-size:0.75rem; color:#e0f2fe; margin-top:2px;" id="weatherCondition">Cerah Berawan • Nyaman untuk Ambil Pesanan</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="stat-label" style="color:#e0f2fe;">Indeks Kualitas Udara</div>
+              <span class="aqi-pill" id="aqiBadge">AQI 42 • Baik / Sehat</span>
+            </div>
+          </div>
+
+          <div class="weather-stats-grid">
+            <div class="weather-stat-box">
+              <div class="stat-label"><i class="fa-solid fa-droplet text-info"></i> Kelembaban</div>
+              <div class="stat-value" id="weatherHumidity">76%</div>
+            </div>
+            <div class="weather-stat-box">
+              <div class="stat-label"><i class="fa-solid fa-wind text-slate"></i> Kecepatan Angin</div>
+              <div class="stat-value" id="weatherWind">11 km/j</div>
+            </div>
+            <div class="weather-stat-box">
+              <div class="stat-label"><i class="fa-solid fa-motorcycle text-emerald"></i> Kurir Lokal</div>
+              <div class="stat-value" style="color:var(--primary);">Siap Antar</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OVERLAY DROPDOWN 3: Dzikir Pagi & Petang dari almatsurat.com -->
+        <div class="portal-dropdown-content" id="dropdownDzikirContent">
+          <div class="dropdown-header-bar">
+            <span class="dropdown-title">
+              <i class="fa-solid fa-book-open-reader text-emerald"></i> Dzikir Pagi & Petang Al-Ma'tsurat
+            </span>
+            <button type="button" class="dropdown-close-btn" data-close="dropdownDzikirContent">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <!-- Pesan Ajakan Wajib sesuai PRD v2.1 Bab 6.2 -->
+          <div class="dzikir-mandate-alert">
+            <i class="fa-solid fa-heart-circle-check text-gold" style="font-size:0.95rem;"></i>
+            <span>"Biasakan membaca Al-Matsurat setiap pagi dan petang"</span>
+          </div>
+
+          <!-- Pilihan Dzikir Pagi / Petang -->
+          <div class="dzikir-tabs">
+            <button type="button" class="dzikir-tab-btn active" id="tabDzikirPagi">
+              <i class="fa-solid fa-sun text-gold"></i> Dzikir Pagi
+            </button>
+            <button type="button" class="dzikir-tab-btn" id="tabDzikirPetang">
+              <i class="fa-solid fa-moon text-info"></i> Dzikir Petang
+            </button>
+          </div>
+
+          <!-- Daftar Bacaan Al-Ma'tsurat dengan Tasbih Counter -->
+          <div id="dzikirListContainer" style="max-height: 250px; overflow-y: auto;"></div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.64rem; color:var(--slate-muted); margin-top:6px;">
+            <span>Referensi: <a href="https://almatsurat.com/" target="_blank" rel="noopener" style="color:var(--primary); font-weight:700;">https://almatsurat.com/</a></span>
+            <span>Al-Ma'tsurat Sugro • Hasan Al-Banna</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- HEADER 2: Otak Aplikasi — Smart AI Chatbot Kiko (Collapsible, Voice Note, & Auto-Expand Textarea) -->
+      <div class="header-kiko-ai" id="headerKikoAi">
+        <!-- Collapsible Toggle Bar -->
+        <div class="kiko-collapse-bar" id="kikoCollapseBar" title="Klik untuk membuka/menutup bar Chatbot Kiko">
+          <div class="kiko-collapse-title">
+            <img src="assets/kiko_mascot.jpg" alt="Robot Kiko Berpeci" class="kiko-avatar-mini">
+            <span>Otak Aplikasi: Smart AI Chatbot Kiko (NLP Teks & Voice Note)</span>
+            <span class="ai-status-indicator">Online</span>
+          </div>
+          <i class="fa-solid fa-chevron-up kiko-collapse-toggle-icon" id="kikoCollapseIcon"></i>
+        </div>
+
+        <!-- Collapsible Body -->
+        <div class="kiko-chat-body">
+          <div class="kiko-input-container">
+            <!-- Kolom Input Chat Fleksibel yang Auto-Expand mengikuti panjang teks -->
+            <textarea
+              class="kiko-auto-textarea"
+              id="kikoHeaderInput"
+              rows="1"
+              placeholder="Ketik atau ucapkan pesanan: Beli HVS A4 5 rim dan Pulpen Pilot 1 kotak..."></textarea>
+
+            <!-- Tombol Voice Note Microphone -->
+            <button type="button" class="kiko-btn-voice" id="btnHeaderVoice" title="Rekam Voice Note Pesanan">
+              <i class="fa-solid fa-microphone"></i>
+            </button>
+
+            <!-- Tombol Kirim Pesan NLP -->
+            <button type="button" class="kiko-btn-send" id="btnHeaderSend" title="Proses dengan AI Kiko">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+
+          <!-- Quick NLP Action Chips -->
+          <div class="kiko-quick-chips">
+            <span class="nlp-chip" data-nlp="Beli HVS A4 5 rim dan Pulpen Pilot satu kotak">
+              <i class="fa-solid fa-cart-plus text-gold"></i> Beli HVS A4 5 rim + Pilot
+            </span>
+            <span class="nlp-chip" data-nlp="Cek stok kertas folio bergaris SiDU">
+              <i class="fa-solid fa-boxes-stacked text-danger"></i> Cek Stok 0 (Folio Bergaris)
+            </span>
+            <span class="nlp-chip" data-nlp="Kalau cetak skripsi 60 halaman warna jilid spiral kawat habis berapa?">
+              <i class="fa-solid fa-graduation-cap text-emerald"></i> Hitung Cetak Skripsi
+            </span>
+            <span class="nlp-chip" data-nlp="Cek rincian saldo komisi instansi SDN 01 Tanjung Raja">
+              <i class="fa-solid fa-scale-balanced text-gold"></i> Cek Saldo Komisi SPJ
+            </span>
+            <span class="nlp-chip" data-nlp="Mau tukar hadiah reward 15x transaksi bintang 5">
+              <i class="fa-solid fa-gift text-info"></i> Klaim Reward 15x
+            </span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+
+    <!-- =======================================================================
+         MAIN CONTENT VIEWS (5 MENU NAVIGASI BAWAH)
+         ======================================================================= -->
+    <main id="mainContent">
+
+      <!-- =====================================================================
+           VIEW 1: BERANDA (HOME — MARQUEE, INSTANSI & LOYALTY, GRID 2 KOLOM)
+           ===================================================================== -->
+      <section class="app-view active" id="viewHome">
+
+        <!-- 2. GALERI REVIEW BERANIMASI (RUNNING CARD MARQUEE BERGERAK DARI KIRI KE KANAN) -->
+        <div class="marquee-section">
+          <div class="marquee-section-title">
+            <h4>
+              <i class="fa-solid fa-award text-gold"></i> Galeri Review Bintang 5 & Bukti Cetak/Struk
+            </h4>
+            <span class="badge-live">
+              <i class="fa-solid fa-arrow-right-long text-emerald"></i> Marquee Kiri ke Kanan
+            </span>
+          </div>
+
+          <div class="marquee-container" id="reviewMarqueeContainer">
+            <div class="marquee-track" id="marqueeTrack">
+              <!-- Diisi dinamis oleh app.js dengan animasi bergerak dari kiri ke kanan -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. KARTU AKUN INSTANSI (SALDO KOMISI & NOTA PDF SPJ) & KARTU LOYALTY 15x -->
+        <div class="cards-showcase-section">
+
+          <!-- Kartu Akun Instansi -->
+          <div class="instansi-card" id="instansiSpjCard">
+            <div class="instansi-header">
+              <div>
+                <span class="instansi-badge">
+                  <i class="fa-solid fa-building-columns"></i> Kartu Akun Mitra Instansi SPJ
+                </span>
+                <div class="instansi-name" id="instansiNameText">SDN 01 Tanjung Raja</div>
+                <div class="instansi-sub" id="instansiRepText">Perwakilan: Dra. Hj. Nurjanah, M.Pd (Bendahara Sekolah)</div>
+              </div>
+              <div style="text-align:right;">
+                <span style="font-size:0.65rem; color:#fef08a; font-weight:700; display:block;">
+                  <i class="fa-solid fa-shield-halved"></i> Transparan & Halal
+                </span>
+                <span style="font-size:0.6rem; color:#94a3b8;">Komisi 5% Otomatis</span>
+              </div>
+            </div>
+
+            <!-- Transparansi Saldo Komisi Pembeli -->
+            <div class="instansi-balance-box">
+              <div>
+                <div class="balance-label">Transparansi Saldo Komisi Pembeli</div>
+                <div style="font-size:0.62rem; color:#94a3b8;">Akumulasi belanja borongan ATK & cetak berkas dinas</div>
+              </div>
+              <div class="balance-value" id="instansiBalanceVal">Rp 485.000</div>
+            </div>
+
+            <!-- Kutipan Al-Qur'an Kontekstual (QS. Al-Isra: 34) -->
+            <div class="instansi-quote-quran">
+              "Dan penuhilah janji, sesungguhnya janji itu pasti diminta pertanggungjawabannya." (QS. Al-Isra: 34)
+            </div>
+
+            <!-- Tombol Unduh, Kirim Email Nota PDF SPJ Resmi, & Ajukan Pencairan Komisi -->
+            <div class="instansi-actions-row" style="grid-template-columns:1fr 1fr;">
+              <button type="button" class="btn-spj-download" id="btnPreviewSpjPdf">
+                <i class="fa-solid fa-file-pdf"></i> Unduh Nota PDF SPJ
+              </button>
+              <button type="button" class="btn-spj-email" id="btnEmailSpj">
+                <i class="fa-solid fa-envelope-circle-check"></i> Email Nota SPJ Resmi
+              </button>
+            </div>
+            <button type="button" class="loyalty-gift-preview-btn" id="btnRequestCommissionPayout" style="margin-top:8px; background:rgba(16, 185, 129, 0.2); border-color:#10b981; color:#a7f3d0;">
+              <i class="fa-solid fa-money-bill-transfer text-gold"></i> Ajukan Pencairan Saldo Komisi Instansi
+            </button>
+          </div>
+
+          <!-- Kartu Loyalty Program 15x Transaksi Bintang 5 + Ulasan -->
+          <div class="loyalty-card" id="loyaltyMemberCard">
+            <div class="loyalty-header">
+              <div class="loyalty-title">
+                <i class="fa-solid fa-crown"></i> Kartu Loyalty 15x Transaksi Bintang 5
+              </div>
+              <div class="loyalty-counter-badge" id="loyaltyCounterBadge">
+                12 / 15 Transaksi ★5
+              </div>
+            </div>
+
+            <!-- Progress Bar Emas -->
+            <div class="loyalty-progress-container">
+              <div class="loyalty-progress-bar" id="loyaltyProgressBar" style="width: 80%;"></div>
+            </div>
+
+            <div class="loyalty-status-row">
+              <span>Syarat: Konsisten Rating ★5 + Ulasan</span>
+              <strong style="color:#fef08a;" id="loyaltyRemainingText">3x Transaksi Lagi Gratis Hadiah!</strong>
+            </div>
+
+            <!-- Kutipan Hadits Kontekstual (HR. Bukhari) -->
+            <div class="loyalty-hadith-quote">
+              "Saling memberi hadiahlah kalian, niscaya kalian akan saling mencintai." (HR. Bukhari dalam Al-Adab Al-Mufrad)
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <button type="button" class="loyalty-gift-preview-btn" id="btnOpenLoyaltyGifts">
+                <i class="fa-solid fa-gift text-gold"></i> Pilih Hadiah Loyalty
+              </button>
+              <button type="button" class="loyalty-gift-preview-btn" id="btnOpenAddReviewModal" style="background:rgba(255,255,255,0.14);">
+                <i class="fa-solid fa-star text-gold"></i> Beri Rating ★5 (+1)
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 4. GRID ETALASE PRODUK 2 KOLOM ALA TOKOPEDIA MOBILE -->
+        <div class="catalog-section">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h3 style="font-size:0.92rem; color:var(--primary-dark); display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-bag-shopping text-gold"></i> Etalase Katalog ATK & Percetakan
+            </h3>
+            <span style="font-size:0.66rem; color:var(--slate-muted); font-weight:600;">
+              <i class="fa-solid fa-hand-pointer text-emerald"></i> Klik produk untuk detail
+            </span>
+          </div>
+
+          <!-- Search Bar + Barcode Scanner Trigger -->
+          <div class="search-bar-wrapper">
+            <i class="fa-solid fa-magnifying-glass search-icon-left"></i>
+            <input
+              type="text"
+              class="search-input"
+              id="productSearchInput"
+              placeholder="Cari Kertas A4, Jilid Skripsi, Pulpen Pilot...">
+            <button type="button" class="barcode-scanner-trigger" id="btnTriggerBarcode" title="Scan Barcode Barang ATK">
+              <i class="fa-solid fa-barcode"></i>
+            </button>
+          </div>
+
+          <!-- Filter Kategori Cepat -->
+          <div class="category-chips-row" id="categoryChipsRow">
+            <button type="button" class="cat-chip active" data-cat="all">Semua Produk</button>
+            <button type="button" class="cat-chip" data-cat="kertas">Kertas & Buku</button>
+            <button type="button" class="cat-chip" data-cat="alat-tulis">Alat Tulis</button>
+            <button type="button" class="cat-chip" data-cat="cetak">Jasa Cetak & Jilid</button>
+            <button type="button" class="cat-chip" data-cat="kantor">Perlengkapan Kantor</button>
+            <button type="button" class="cat-chip" data-cat="tinta">Tinta & Aksesoris</button>
+          </div>
+
+          <!-- Grid Produk 2 Kolom (Klik Gambar -> Buka Slide-Up Bottom-Sheet Detail & Spesifikasi) -->
+          <div class="product-grid-2col" id="productGridContainer">
+            <!-- Diisi secara dinamis oleh app.js -->
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================================
+           VIEW 2: ORDER CETAK (UPLOAD BERKAS DRIVE & KALKULATOR FOTOKOPI/JILID)
+           ===================================================================== -->
+      <section class="app-view" id="viewPrintOrder">
+        <div style="padding: 16px;">
+          <div style="margin-bottom: 10px;">
+            <h3 style="font-size: 1.05rem; color: var(--primary-dark); display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-print text-gold"></i> Order Cetak & Fotokopi Online Tanpa Antre
+            </h3>
+            <p style="font-size: 0.74rem; color: var(--slate-muted);">
+              Kirim berkas PDF/Word/Skripsi dari rumah atau sekolah. Pilih <strong>Ambil di Toko (Click & Collect)</strong> atau <strong>Pesan Antar Kurir Lokal Tanjung Raja</strong>.
+            </p>
+          </div>
+
+          <!-- Banner Instruksi Uji Efek Sentuh / Hover Pelangi Glowing Border Hitam -->
+          <div class="hover-test-banner">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span><strong>Uji Efek Sentuh / Hover:</strong> Dekatkan kursor mouse atau sentuh kartu formulir dan kartu estimasi biaya untuk melihat animasi garis pelangi glowing menyala di sekeliling border hitamnya!</span>
+          </div>
+
+          <!-- Kutipan Hadits Menuntut Ilmu (Momen Penting #1 PRD 4.2) -->
+          <div class="dzikir-mandate-alert" style="margin-bottom:14px; border:2px solid #111827;">
+            <i class="fa-solid fa-graduation-cap text-gold" style="font-size:1.1rem;"></i>
+            <span>"Barangsiapa menempuh jalan untuk menuntut ilmu, maka Allah mudahkan baginya jalan menuju surga." (HR. Muslim)</span>
+          </div>
+
+          <!-- Kartu Formulir Order Cetak dengan Border Luar Hitam & Efek Pelangi Glowing -->
+          <div class="glow-card-black" style="padding:16px; display:flex; flex-direction:column; gap:12px;">
+            <div>
+              <label style="font-size:0.74rem; font-weight:700; display:block; margin-bottom:4px;">Nama Pemesan / Instansi</label>
+              <input type="text" class="search-input" id="printCustomerName" value="Dra. Hj. Nurjanah, M.Pd (SDN 01 Tanjung Raja)" style="padding:8px 12px; border:1.5px solid #111827;">
+            </div>
+
+            <div>
+              <label style="font-size:0.74rem; font-weight:700; display:block; margin-bottom:4px;">Jenis Layanan Cetak (`Master_Layanan_Cetak`)</label>
+              <select class="search-input" id="printServiceType" style="padding:8px 12px; border:1.5px solid #111827;">
+                <option value="bw" data-price="350">Fotokopi / Print Hitam Putih (B/W) — Rp 350 / lembar</option>
+                <option value="color-text" data-price="1000" selected>Print Warna Standar / Tugas / Skripsi — Rp 1.000 / lembar</option>
+                <option value="color-full" data-price="2500">Print Full Color / Grafik / Poster — Rp 2.500 / lembar</option>
+                <option value="photo" data-price="5000">Cetak Pas Foto & Kertas Glossy — Rp 5.000 / lembar</option>
+              </select>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+              <div>
+                <label style="font-size:0.72rem; font-weight:700; display:block; margin-bottom:4px;">Ukuran Kertas</label>
+                <select class="search-input" id="printPaperSize" style="padding:8px 10px; border:1.5px solid #111827;">
+                  <option value="A4">A4 80gsm</option>
+                  <option value="F4">F4 / Folio</option>
+                  <option value="A3">A3 Lebar</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:0.72rem; font-weight:700; display:block; margin-bottom:4px;">Jml Halaman</label>
+                <input type="number" class="search-input" id="printPageCount" value="60" min="1" style="padding:8px 10px; border:1.5px solid #111827;">
+              </div>
+              <div>
+                <label style="font-size:0.72rem; font-weight:700; display:block; margin-bottom:4px;">Rangkap (Copy)</label>
+                <input type="number" class="search-input" id="printCopyCount" value="1" min="1" style="padding:8px 10px; border:1.5px solid #111827;">
+              </div>
+            </div>
+
+            <div>
+              <label style="font-size:0.74rem; font-weight:700; display:block; margin-bottom:4px;">Opsi Jilid & Laminating</label>
+              <select class="search-input" id="printFinishingType" style="padding:8px 12px; border:1.5px solid #111827;">
+                <option value="none" data-price="0">Tanpa Jilid (Steples / Klip Rapi) — Gratis</option>
+                <option value="spiral-plastik" data-price="6000">Jilid Spiral Plastik + Mika — Rp 6.000 / buku</option>
+                <option value="spiral-kawat" data-price="12000" selected>Jilid Spiral Kawat Skripsi + Mika — Rp 12.000 / buku</option>
+                <option value="softcover" data-price="15000">Jilid Softcover Lakban / Laminating — Rp 15.000 / buku</option>
+                <option value="hardcover" data-price="35000">Jilid Hardcover Skripsi Tinta Emas — Rp 35.000 / buku</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="font-size:0.74rem; font-weight:700; display:block; margin-bottom:4px;">Unggah Berkas Dokumen ke Google Drive Toko Delina</label>
+              <input type="file" class="search-input" id="printFileUpload" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.png" style="padding:6px; border:1.5px solid #111827;">
+              <div style="font-size:0.65rem; color:var(--slate-muted); margin-top:3px;" id="printFileStatus">
+                <i class="fa-brands fa-google-drive text-emerald"></i> File otomatis diunggah ke folder Antrean_Cetak Google Drive
+              </div>
+            </div>
+
+            <div>
+              <label style="font-size:0.74rem; font-weight:700; display:block; margin-bottom:4px;">Catatan Spesifik untuk Operator Fotokopi</label>
+              <textarea class="search-input" id="printNotes" rows="2" placeholder="Contoh: Bab 1-5 kertas A4 80gsm, cover depan warna hijau muda..." style="border:1.5px solid #111827;"></textarea>
+            </div>
+
+            <!-- Kartu Estimasi Biaya Cetak dengan Border Hitam & Efek Pelangi Glowing -->
+            <div class="glow-card-black" style="background:#ecfdf5; padding:12px; display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div style="font-size:0.75rem; font-weight:800; color:var(--primary-dark);">Total Estimasi Biaya Cetak</div>
+                <div style="font-size:0.66rem; color:#047857; font-weight:600;" id="printFormulaBreakdown">
+                  (60 Hal × Rp 1.000 + Jilid Rp 12.000) × 1 Rangkap
+                </div>
+              </div>
+              <div style="font-family:var(--font-mono); font-size:1.3rem; font-weight:800; color:var(--primary);" id="printTotalEstimate">
+                Rp 72.000
+              </div>
+            </div>
+
+            <button type="button" class="btn-sheet-add-cart" id="btnSubmitPrintOrder" style="height:46px; border:2px solid #111827; font-size:0.84rem;">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Kirim ke Antrean Cetak & Lanjut ke Keranjang Pembayaran
+            </button>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           VIEW 3: KERANJANG BELANJA & CHECKOUT CERDAS (WAJIB BAYAR + QRIS + BALON PECAH)
+           ===================================================================== -->
+      <section class="app-view" id="viewCart">
+        <div style="padding: 16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h3 style="font-size: 1.05rem; color: var(--primary-dark); display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-cart-shopping text-emerald"></i> Keranjang Belanja & Cetak
+            </h3>
+            <span class="badge-halal-syariah" style="position:static; border:1.5px solid #111827;">Akad Syariah Bebas Riba</span>
+          </div>
+
+          <!-- Banner Instruksi Uji Efek Sentuh / Hover Pelangi Glowing Border Hitam -->
+          <div class="hover-test-banner">
+            <i class="fa-solid fa-hand-sparkles"></i>
+            <span><strong>Uji Efek Sentuh / Hover:</strong> Dekatkan kursor mouse atau sentuh kartu barang, kartu QRIS, dan kartu estimasi biaya untuk melihat animasi garis pelangi glowing menyala di sekeliling border hitamnya!</span>
+          </div>
+
+          <!-- Switcher Kategori Harga: Eceran Umum vs Grosir Mitra Instansi SPJ -->
+          <div class="glow-card-black" style="background:#fefce8; padding:11px 13px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+            <div>
+              <div style="font-size:0.78rem; font-weight:800; color:#854d0e;">Kategori Harga Transaksi</div>
+              <div style="font-size:0.68rem; color:#a16207; font-weight:700;" id="cartPriceModeLabel">Harga Eceran Umum</div>
+            </div>
+            <button type="button" class="azan-toggle-btn" id="btnToggleCartWholesale" style="background:var(--gold-gradient); color:var(--charcoal); font-weight:800; border:1.8px solid #111827;">
+              <i class="fa-solid fa-repeat"></i> Aktifkan Harga Grosir SPJ
+            </button>
+          </div>
+
+          <!-- Daftar Item Keranjang Bergambar & Bisa Edit Jumlah Langsung -->
+          <div id="cartItemsContainer" style="display:flex; flex-direction:column; gap:12px; margin-bottom:14px;"></div>
+
+          <!-- Metode Pemenuhan Pesanan (Click & Collect vs Delivery Lokal Tanjung Raja) -->
+          <div class="glow-card-black" style="padding:13px; margin-bottom:14px;">
+            <label style="font-size:0.78rem; font-weight:800; display:block; margin-bottom:8px;">
+              <i class="fa-solid fa-route text-emerald"></i> Metode Pemenuhan Pesanan (PRD Bab 2.2)
+            </label>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <button type="button" class="dzikir-tab-btn active" id="btnFulfillmentCollect" style="border:1.8px solid #111827;">
+                <i class="fa-solid fa-store"></i> Ambil di Toko (Gratis)
+              </button>
+              <button type="button" class="dzikir-tab-btn" id="btnFulfillmentDelivery" style="border:1.8px solid #111827;">
+                <i class="fa-solid fa-motorcycle"></i> Pesan Antar Lokal
+              </button>
+            </div>
+            <div style="font-size:0.7rem; color:var(--slate-muted); margin-top:8px; font-weight:600;" id="fulfillmentDesc">
+              📍 Click & Collect: Ambil langsung di Toko Delina Jl. Lintas Sumatera, Tanjung Raja tanpa antre.
+            </div>
+
+            <!-- Form Alamat Pengiriman & Patokan (Muncul otomatis saat pilih Pesan Antar Lokal) -->
+            <div id="cartDeliveryAddressBox" style="display:none; margin-top:10px; padding-top:10px; border-top:1.5px dashed #cbd5e1;">
+              <div style="font-size:0.72rem; font-weight:800; color:var(--primary-dark); margin-bottom:6px;">
+                <i class="fa-solid fa-location-dot text-gold"></i> Detail Alamat Pengantaran Kurir Lokal Tanjung Raja:
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:6px;">
+                <input type="text" class="search-input" id="cartInputRecipient" value="Dra. Hj. Nurjanah, M.Pd" placeholder="Nama Penerima" style="padding:6px 10px; font-size:0.72rem; border:1.5px solid #111827;">
+                <input type="text" class="search-input" id="cartInputPhone" value="0812-7890-8812" placeholder="No. WA Aktif" style="padding:6px 10px; font-size:0.72rem; border:1.5px solid #111827;">
+              </div>
+              <input type="text" class="search-input" id="cartInputAddress" value="SDN 01 Tanjung Raja, Jl. Lintas Sumatera (Depan Lapangan)" placeholder="Alamat Lengkap / Nama Sekolah / Kantor Desa & Patokan..." style="padding:7px 10px; font-size:0.72rem; border:1.5px solid #111827;">
+            </div>
+          </div>
+
+          <!-- KARTU PEMBAYARAN RESMI: QRIS TEGAS & DAFTAR NOMOR REKENING BANK TOKO DELINA -->
+          <div class="glow-card-black" id="cartPaymentRekeningCard" style="padding:14px; margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <span style="font-size:0.8rem; font-weight:800; color:var(--primary-dark);">
+                <i class="fa-solid fa-qrcode text-gold"></i> Pembayaran Resmi: QRIS & Rekening Bank Toko Delina
+              </span>
+              <span class="aqi-pill" style="border:1px solid #111827; font-weight:800;">Wajib Bayar Dulu</span>
+            </div>
+
+            <div class="qris-rekening-grid">
+              <!-- Kotak QRIS Resmi (Bisa Diklik untuk Perbesar) -->
+              <div class="qris-big-box" id="btnZoomQrisBox" title="Klik untuk memperbesar QRIS Toko Delina">
+                <div style="font-size:0.62rem; font-weight:800; color:#111827; margin-bottom:4px;">QRIS NASIONAL SYARIAH</div>
+                <div class="qris-svg-frame" id="cartQrisVisualContainer">
+                  <i class="fa-solid fa-qrcode" style="font-size:5.2rem; color:#111827;"></i>
+                </div>
+                <div style="font-size:0.62rem; font-weight:800; color:var(--primary-dark); margin-top:4px;" id="cartQrisMerchantName">
+                  TOKO DELINA ATK
+                </div>
+                <div style="font-size:0.56rem; color:var(--slate-muted);">NMID: ID102604589112</div>
+                <span style="margin-top:4px; background:#111827; color:#fef08a; font-size:0.58rem; font-weight:700; padding:2px 8px; border-radius:99px;">
+                  <i class="fa-solid fa-magnifying-glass-plus"></i> Klik Perbesar QRIS
+                </span>
+              </div>
+
+              <!-- Daftar Nomor Rekening Bank Jelas & Tegas + Tombol Salin 1-Klik -->
+              <div id="cartBankAccountsList" style="display:flex; flex-direction:column; justify-content:center;">
+                <!-- Diisi otomatis oleh app.js dari APP_STATE.store.bankAccounts -->
+              </div>
+            </div>
+          </div>
+
+          <!-- LANGKAH WAJIB: UNGGAH BUKTI TRANSFER / QRIS & SCAN VISION AI OCR -->
+          <div class="glow-card-black" id="cartOcrValidationCard" style="background:#f8fafc; padding:14px; margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+              <span style="font-size:0.78rem; font-weight:800; color:var(--primary-dark);">
+                <i class="fa-solid fa-camera-retro text-gold"></i> Upload Bukti Transfer / QRIS (Wajib Sebelum Diproses)
+              </span>
+              <span class="aqi-pill" id="cartOcrStatusBadge" style="background:#fee2e2; color:#991b1b; border:1px solid #111827; font-weight:800;">
+                🔒 Belum Upload Bukti Bayar
+              </span>
+            </div>
+
+            <p style="font-size:0.68rem; color:var(--slate-muted); margin-bottom:8px;">
+              Silakan transfer sesuai <strong>Total Tagihan Syariah</strong> ke QRIS / Rekening di atas, lalu unggah foto/screenshot bukti bayar Anda untuk membuka kunci tombol Checkout:
+            </p>
+
+            <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+              <input type="file" class="search-input" id="cartOcrFileInput" accept="image/*" style="padding:6px; font-size:0.7rem; flex:1; min-width:160px; border:1.5px solid #111827;">
+              <button type="button" class="azan-toggle-btn" id="btnSimulateProofFile" style="background:var(--gold-gradient); color:#111827; font-weight:800; border:1.5px solid #111827; white-space:nowrap; padding:7px 10px;" title="Simulasi cepat memilih foto struk transfer">
+                <i class="fa-solid fa-bolt"></i> Contoh Bukti Bayar
+              </button>
+              <button type="button" class="azan-toggle-btn" id="btnScanOcrCart" style="white-space:nowrap; padding:7px 12px; border:1.5px solid #111827;">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Scan Vision AI
+              </button>
+            </div>
+
+            <!-- Kotak Preview Gambar Bukti Bayar + Laser Scanner Vision AI -->
+            <div class="ocr-preview-container" id="cartOcrPreviewBox">
+              <div class="ocr-laser-beam"></div>
+              <img src="assets/print_review.jpg" alt="Preview Bukti Bayar" id="cartOcrPreviewImg">
+              <div style="background:#111827; color:#fef08a; font-size:0.66rem; font-weight:700; padding:5px 10px; display:flex; justify-content:space-between; align-items:center;" id="cartOcrPreviewCaption">
+                <span><i class="fa-solid fa-shield-halved text-emerald"></i> Bukti Transfer Terlampir & Valid</span>
+                <button type="button" id="btnRemoveProofImg" style="background:#dc2626; color:#fff; border:none; border-radius:4px; padding:2px 6px; font-size:0.6rem; cursor:pointer;">Ganti Foto</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kartu Estimasi & Ringkasan Tagihan Syariah dengan Border Hitam + Pelangi Glowing -->
+          <div class="glow-card-black" style="padding:15px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.78rem; margin-bottom:5px;">
+              <span style="color:var(--slate-muted); font-weight:600;">Subtotal ATK & Jasa Cetak</span>
+              <strong id="cartSubtotal">Rp 0</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.78rem; margin-bottom:5px;">
+              <span style="color:var(--slate-muted); font-weight:600;">Ongkir Kurir Lokal Tanjung Raja</span>
+              <strong id="cartOngkir">Rp 0</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.78rem; margin-bottom:8px; color:var(--primary); font-weight:700;">
+              <span>Komisi Pembeli Instansi SPJ (Transparan 5%)</span>
+              <strong id="cartEstKomisi">Rp 0</strong>
+            </div>
+            <div style="border-top:2px dashed #111827; padding-top:10px; display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px;">
+              <span style="font-weight:800; font-size:0.92rem;">Total Tagihan Syariah</span>
+              <span style="font-family:var(--font-mono); font-size:1.35rem; font-weight:800; color:var(--primary);" id="cartGrandTotal">Rp 0</span>
+            </div>
+
+            <!-- Indikator Status Kunci Pembayaran -->
+            <div id="checkoutLockNotice" style="background:#fff1f2; border:1.5px solid #111827; color:#9f1239; border-radius:var(--radius-sm); padding:7px 10px; font-size:0.7rem; font-weight:700; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-lock"></i>
+              <span>Wajib upload bukti transfer/QRIS di atas terlebih dahulu agar pesanan dapat diproses!</span>
+            </div>
+
+            <button type="button" class="btn-sheet-add-cart btn-checkout-locked" id="btnCheckoutSubmit" style="width:100%; height:48px; font-size:0.86rem; border:2px solid #111827;">
+              <i class="fa-solid fa-lock"></i> Upload Bukti Bayar Dulu untuk Proses Checkout
+            </button>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           VIEW 4: LACAK PESANAN, FOTO CETAKAN KASIR, & VERIFIKASI VISION AI
+           ===================================================================== -->
+      <section class="app-view" id="viewTrack">
+        <div style="padding: 16px;">
+          <h3 style="font-size: 1.05rem; color: var(--primary-dark); display:flex; align-items:center; gap:6px; margin-bottom:6px;">
+            <i class="fa-solid fa-truck-fast text-gold"></i> Lacak Status Pesanan & Foto Hasil Cetakan
+          </h3>
+          <p style="font-size:0.72rem; color:var(--slate-muted); margin-bottom:10px;">
+            Pilih dari daftar pesanan terbaru Anda atau ketik Nomor Invoice untuk melihat status pengerjaan operator kasir secara <em>real-time</em>.
+          </p>
+
+          <!-- Pilihan Cepat Invoice Terbaru (Terhubung otomatis dengan Checkout, Order Cetak, & POS Kasir) -->
+          <div style="margin-bottom:8px;">
+            <label style="font-size:0.7rem; font-weight:700; color:var(--charcoal); display:block; margin-bottom:3px;">Pilih Pesanan / Invoice Terbaru:</label>
+            <select class="search-input" id="selectTrackRecentInvoice" style="padding:8px 12px; font-weight:700;"></select>
+          </div>
+
+          <div style="display:flex; gap:8px; margin-bottom:14px;">
+            <input type="text" class="search-input" id="inputTrackInvoice" value="#INV-20261027-088" placeholder="Atau ketik Nomor Invoice (#INV-088)">
+            <button type="button" class="btn-sheet-add-cart" id="btnSearchTrack" style="width:auto; padding:0 16px;">
+              <i class="fa-solid fa-magnifying-glass"></i> Cari
+            </button>
+          </div>
+
+          <div style="background:#ffffff; border:1.5px solid var(--gold); border-radius:var(--radius-lg); padding:16px; box-shadow:var(--shadow-sm);">
+            <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--surface-border); padding-bottom:8px; margin-bottom:10px;">
+              <div>
+                <span style="font-family:var(--font-mono); font-weight:800; font-size:0.9rem; color:var(--primary);" id="trackInvoiceNum">#INV-20261027-088</span>
+                <div style="font-size:0.72rem; font-weight:600; color:var(--charcoal);" id="trackCustomerLabel">Pemesan: Dra. Hj. Nurjanah, M.Pd (SDN 01 Tanjung Raja)</div>
+                <div style="font-size:0.68rem; color:var(--slate-muted);" id="trackItemsSummaryLabel">Rincian: 5 Rim HVS A4 80g, 2 Ktk Pilot G2, Cetak Ujian • Total: Rp 422.000</div>
+              </div>
+              <span class="aqi-pill" style="height:fit-content;" id="trackStatusBadge">Selesai • Siap Ambil</span>
+            </div>
+
+            <!-- Stepper Status Dinamis -->
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; margin-bottom:14px; text-align:center; font-size:0.66rem;" id="trackStepperBox">
+              <div id="trackStep1" style="background:#ecfdf5; border:1px solid #10b981; padding:6px; border-radius:6px; color:#065f46; font-weight:700;">
+                <i class="fa-solid fa-circle-check"></i> 1. Antre / OCR
+              </div>
+              <div id="trackStep2" style="background:#ecfdf5; border:1px solid #10b981; padding:6px; border-radius:6px; color:#065f46; font-weight:700;">
+                <i class="fa-solid fa-print"></i> 2. Dicetak/Disiapkan
+              </div>
+              <div id="trackStep3" style="background:#fefce8; border:1.5px solid var(--gold); padding:6px; border-radius:6px; color:#854d0e; font-weight:800;">
+                <i class="fa-solid fa-box-open"></i> 3. Siap Ambil/Lunas
+              </div>
+            </div>
+
+            <!-- Foto Hasil Cetakan yang Diunggah Kasir/Operator -->
+            <div style="margin-bottom:14px;">
+              <div style="font-size:0.74rem; font-weight:700; color:var(--charcoal); margin-bottom:6px;">
+                <i class="fa-solid fa-camera text-emerald"></i> Bukti Foto Hasil Cetakan & Struk (Diunggah Operator di POS Kasir)
+              </div>
+              <div style="width:100%; aspect-ratio:16/9; border-radius:var(--radius-md); overflow:hidden; border:1.5px solid var(--gold);">
+                <img src="assets/print_review.jpg" alt="Foto hasil cetakan" id="trackResultPhoto" style="width:100%; height:100%; object-fit:cover;">
+              </div>
+            </div>
+
+            <!-- Status Validasi Vision AI OCR -->
+            <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:var(--radius-md); padding:10px; margin-bottom:12px; font-size:0.72rem; color:#065f46; display:flex; align-items:center; gap:8px;">
+              <i class="fa-solid fa-robot text-gold" style="font-size:1.15rem;"></i>
+              <div id="trackOcrText">
+                <strong>Vision AI OCR Terverifikasi 100%:</strong> Bukti pembayaran cocok dengan tagihan. Komisi SPJ otomatis tercatat.
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+              <button type="button" class="btn-spj-download" id="btnTrackViewStruk">
+                <i class="fa-solid fa-receipt"></i> Buka Struk Thermal
+              </button>
+              <button type="button" class="btn-spj-email" id="btnTrackOpenSpj" style="background:var(--primary); border-color:var(--gold);">
+                <i class="fa-solid fa-file-pdf"></i> Buka Nota PDF SPJ
+              </button>
+            </div>
+            <button type="button" class="btn-sheet-add-cart" id="btnTrackSendWaReal" style="width:100%; background:#25d366; height:38px; font-size:0.76rem;">
+              <i class="fa-brands fa-whatsapp"></i> Kirim Rincian Struk Ini ke WhatsApp (1-Klik wa.me)
+            </button>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           VIEW 5: AKUN MEMBER / INSTANSI, TERMINAL POS KASIR, & DASHBOARD OWNER
+           ===================================================================== -->
+      <section class="app-view" id="viewAccount">
+        <div style="padding: 16px;">
+
+          <!-- Kartu Profil Pengguna Aktif -->
+          <div style="background:linear-gradient(135deg, #0a5c36 0%, #0f5132 100%); color:#ffffff; padding:16px; border-radius:var(--radius-lg); margin-bottom:14px; display:flex; align-items:center; gap:12px; border:1.5px solid var(--gold);">
+            <div style="width:54px; height:54px; border-radius:50%; background:#ffffff; overflow:hidden; border:2px solid var(--gold); flex-shrink:0;">
+              <img src="assets/kiko_mascot.jpg" alt="Avatar" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-size:0.95rem; font-weight:800;" id="userProfileName">Dra. Hj. Nurjanah, M.Pd</div>
+              <div style="font-size:0.72rem; color:#d1fae5;" id="userProfilePhone">WA / Telegram: 0812-7890-8812</div>
+              <span class="role-badge-pill" style="background:#fef08a; color:#854d0e;" id="userProfileRole">Tingkat 2 • Perwakilan Instansi SPJ</span>
+            </div>
+            <button type="button" class="azan-toggle-btn" id="btnAccountSwitchLogin" style="background:#111827; border:1px solid var(--gold); color:#fef08a;">
+              <i class="fa-solid fa-right-left"></i> Ganti Login
+            </button>
+          </div>
+
+          <!-- Panel Akses Cepat Sistem Hybrid (Halaman Login 4 Tingkat, POS Kasir, & Owner CMS) -->
+          <div style="background:#ffffff; border:1.5px solid var(--gold); border-radius:var(--radius-lg); padding:14px; margin-bottom:14px; box-shadow:var(--shadow-sm);">
+            <div style="font-size:0.8rem; font-weight:800; color:var(--primary-dark); margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
+              <span><i class="fa-solid fa-sliders text-gold"></i> Modul Operasional & RBAC Toko Delina</span>
+              <span style="font-size:0.64rem; color:var(--slate-muted);">PRD v2.1 Bab 3 & 6.3</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+              <button type="button" class="btn-sheet-add-cart" id="btnOpenKasirPos" style="height:42px; font-size:0.76rem;">
+                <i class="fa-solid fa-cash-register"></i> Terminal POS Kasir
+              </button>
+              <button type="button" class="btn-spj-download" id="btnOpenOwnerDashboard" style="height:42px; font-size:0.76rem; background:#111827; color:#fef08a; border:1.5px solid var(--gold);">
+                <i class="fa-solid fa-crown text-gold"></i> Dashboard Owner & CMS
+              </button>
+            </div>
+            <button type="button" class="loyalty-gift-preview-btn" id="btnOpenThermalReceiptDemo" style="background:#f8fafc; color:var(--primary-dark); border:1px solid var(--primary);">
+              <i class="fa-solid fa-receipt"></i> Lihat Contoh Struk Thermal Syariah & QRIS
+            </button>
+          </div>
+
+          <!-- Riwayat Pesanan & Unduh Dokumen -->
+          <div style="background:#ffffff; border:1px solid var(--surface-border); border-radius:var(--radius-lg); padding:14px;">
+            <div style="font-size:0.84rem; font-weight:700; color:var(--charcoal); margin-bottom:10px; display:flex; justify-content:space-between;">
+              <span><i class="fa-solid fa-clock-rotate-left text-emerald"></i> Riwayat Transaksi & Arsip SPJ</span>
+              <span style="font-size:0.68rem; color:var(--primary); font-weight:700;">Sinkron Google Sheets</span>
+            </div>
+            <div id="accountOrderHistory" style="display:flex; flex-direction:column; gap:8px;"></div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+
+    <!-- =======================================================================
+         5. FLOATING CHAT WIDGET "KIKO ON-WEB" (ROBOT KIKO BERPECI)
+         Outline box beranimasi warna-warni (rainbow & gold glowing border)
+         ======================================================================= -->
+    <div class="floating-kiko-widget" id="floatingKikoWidget">
+      <div class="kiko-widget-tooltip" id="kikoWidgetTooltip">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Chat Kiko Berpeci!
+      </div>
+
+      <button type="button" class="kiko-mascot-btn" id="btnOpenKikoDialog" title="Buka Asisten AI Kiko On-Web">
+        <img src="assets/kiko_mascot.jpg" alt="Robot Kiko Berpeci" class="kiko-mascot-img">
+        <span class="kiko-badge-alert">4</span>
+      </button>
+    </div>
+
+    <!-- DIALOG FLOATING CHAT "KIKO ON-WEB" (LENGKAP DENGAN PERSONA ISLAMI & 4 KUTIPAN KONTEKSTUAL) -->
+    <div class="kiko-floating-dialog" id="kikoFloatingDialog">
+      <div class="kiko-dialog-header">
+        <div class="dialog-header-info">
+          <img src="assets/kiko_mascot.jpg" alt="Robot Kiko Berpeci" class="dialog-kiko-avatar">
+          <div class="dialog-title-text">
+            <h4>Kiko On-Web (Robot Kiko Berpeci)</h4>
+            <p>Asisten AI Syariah • Tanjung Raja, Ogan Ilir</p>
+          </div>
+        </div>
+        <button type="button" class="dialog-close-btn" id="btnCloseKikoDialog">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Area Percakapan Kiko -->
+      <div class="kiko-dialog-messages" id="kikoDialogMessages">
+        <div class="chat-bubble bubble-kiko">
+          <span class="islamic-greeting">Assalamu’alaikum Warahmatullahi Wabarakatuh, Ahlan wa Sahlan di Kiko Smart Stationery (Toko Delina)!</span>
+          Bismillah, saya <strong>Kiko</strong> siap membantu Kakak berbelanja ATK otomatis (<em>Auto-Add to Cart</em>), mengecek stok barang, menghitung tarif cetak/skripsi, memvalidasi bukti transfer dengan <strong>Vision AI</strong>, hingga mengecek <strong>Saldo Komisi SPJ & Loyalty 15x</strong>. Tafaddhol, ada yang bisa Kiko bantu?
+        </div>
+      </div>
+
+      <!-- Footer Chat Kiko dengan 4 Tombol Uji Momen Al-Qur'an/Hadits & Input Auto-Expand -->
+      <div class="kiko-dialog-footer">
+        <div class="kiko-quick-chips" style="padding-top:2px;">
+          <span class="nlp-chip" id="chipChatHvs" style="background:#ecfdf5; color:#046a38; border-color:#10b981;">
+            <i class="fa-solid fa-cart-plus"></i> Auto-Cart ATK
+          </span>
+          <span class="nlp-chip" id="chipChatPrintHadith" style="background:#fefce8; color:#854d0e; border-color:#f59e0b;">
+            <i class="fa-solid fa-book-quran"></i> 1. Hadits Ilmu/Cetak
+          </span>
+          <span class="nlp-chip" id="chipChatVision" style="background:#e0f2fe; color:#0369a1; border-color:#38bdf8;">
+            <i class="fa-solid fa-receipt"></i> 2. OCR & Hadits Jujur
+          </span>
+          <span class="nlp-chip" id="chipChatKomisiAyat" style="background:#fef3c7; color:#92400e; border-color:#d4af37;">
+            <i class="fa-solid fa-scale-balanced"></i> 3. QS Al-Isra: 34 (SPJ)
+          </span>
+          <span class="nlp-chip" id="chipChatHadiahHadith" style="background:#fce7f3; color:#9d174d; border-color:#f472b6;">
+            <i class="fa-solid fa-gift"></i> 4. Hadits Hadiah 15x
+          </span>
+          <span class="nlp-chip" id="chipChatStok0" style="background:#fee2e2; color:#991b1b; border-color:#f87171;">
+            <i class="fa-solid fa-triangle-exclamation"></i> Stok 0 -> Alternatif
+          </span>
+          <span class="nlp-chip" id="chipChatEskalasi" style="background:#111827; color:#fef08a; border-color:#d4af37;">
+            <i class="fa-brands fa-telegram"></i> Eskalasi Owner
+          </span>
+        </div>
+
+        <div class="dialog-input-row">
+          <textarea
+            class="dialog-text-input"
+            id="kikoDialogInput"
+            rows="1"
+            placeholder="Ketik pesan ke Kiko (auto-expand)..."></textarea>
+          <button type="button" class="kiko-btn-voice" id="btnDialogVoice" title="Voice Note">
+            <i class="fa-solid fa-microphone"></i>
+          </button>
+          <button type="button" class="kiko-btn-send" id="btnDialogSend" title="Kirim">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =======================================================================
+         4B. SLIDE-UP BOTTOM-SHEET DETAIL & SPESIFIKASI LENGKAP BARANG
+         Muncul saat gambar/kartu produk di Grid 2 Kolom diklik
+         ======================================================================= -->
+    <div class="bottom-sheet-backdrop" id="bottomSheetBackdrop">
+      <div class="bottom-sheet-panel" id="bottomSheetPanel">
+        <div class="sheet-handle-bar"></div>
+
+        <div class="sheet-header">
+          <span class="sheet-header-title">
+            <i class="fa-solid fa-circle-info text-emerald"></i> Detail & Spesifikasi Lengkap Barang
+          </span>
+          <button type="button" class="sheet-close-btn" id="btnCloseBottomSheet">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="sheet-content-scroll" id="sheetContentScroll">
+          <!-- Galeri Foto Produk (Klik untuk Zoom) -->
+          <div class="sheet-gallery-zoom" id="sheetGalleryZoomBox" title="Klik gambar untuk memperbesar (Zoom)">
+            <img src="assets/product_hvs.jpg" alt="Detail Produk" class="sheet-gallery-img" id="sheetDetailImg">
+            <span class="badge-halal-syariah" style="top:12px; left:12px;">
+              <i class="fa-solid fa-star-and-crescent text-gold"></i> Syariah Verified • Klik untuk Zoom
+            </span>
+          </div>
+
+          <!-- Nama Produk, Harga Eceran vs Grosir SPJ, & Sisa Stok Real-Time -->
+          <div class="sheet-title-price-box">
+            <h2 class="sheet-product-title" id="sheetProductTitle">Kertas HVS Sinar Dunia PaperOne A4 80gsm</h2>
+            <div class="sheet-prices-row">
+              <span class="sheet-price-main" id="sheetPriceEceran">Rp 54.000</span>
+              <span class="sheet-price-grosir" id="sheetPriceGrosir">Harga Grosir SPJ: Rp 51.000</span>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:0.74rem; color:var(--slate-muted);">
+              <span style="color:#f59e0b; font-weight:700;" id="sheetRatingSold"><i class="fa-solid fa-star"></i> 5.0 (280 Terjual)</span>
+              <span>•</span>
+              <span class="aqi-pill" id="sheetStockBadge">Stok: 35 Rim Ready</span>
+            </div>
+          </div>
+
+          <!-- Tabel Spesifikasi Detail Barang -->
+          <div class="spec-table-wrap">
+            <div class="spec-heading">
+              <i class="fa-solid fa-table-list text-emerald"></i> Spesifikasi Detail Barang (`Master_Produk`)
+            </div>
+            <table class="spec-table" id="sheetSpecTable"></table>
+          </div>
+
+          <!-- Deskripsi Lengkap Produk -->
+          <div class="spec-heading">
+            <i class="fa-solid fa-align-left text-gold"></i> Deskripsi Lengkap Produk
+          </div>
+          <div class="desc-content-box" id="sheetProductDesc"></div>
+
+          <!-- Ulasan Pembeli pada Produk Ini -->
+          <div class="spec-heading">
+            <i class="fa-solid fa-comments text-emerald"></i> Ulasan Pembeli Bintang 5
+          </div>
+          <div id="sheetProductReviews" style="display:flex; flex-direction:column; gap:8px; margin-bottom:8px;"></div>
+        </div>
+
+        <!-- Action Bar Bawah di Bottom-Sheet -->
+        <div class="sheet-bottom-actions">
+          <div class="qty-counter-box">
+            <button type="button" class="qty-btn" id="btnQtyMinus">-</button>
+            <input type="number" class="qty-input" id="inputSheetQty" value="1" min="1">
+            <button type="button" class="qty-btn" id="btnQtyPlus">+</button>
+          </div>
+          <button type="button" class="btn-sheet-tanya-kiko" id="btnSheetAskKiko">
+            <i class="fa-solid fa-robot"></i> Tanya Kiko
+          </button>
+          <button type="button" class="btn-sheet-add-cart" id="btnSheetAddToCart">
+            <i class="fa-solid fa-cart-plus"></i> + Keranjang
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =======================================================================
+         6. 5-MENU BOTTOM NAVIGATION BAR (WAJIB 5 MENU UTAMA)
+         ======================================================================= -->
+    <nav class="bottom-nav-bar" id="bottomNavBar">
+      <button type="button" class="nav-item-btn active" data-view="viewHome">
+        <i class="fa-solid fa-house"></i>
+        <span>Beranda</span>
+      </button>
+
+      <button type="button" class="nav-item-btn" data-view="viewPrintOrder">
+        <i class="fa-solid fa-print"></i>
+        <span>Order Cetak</span>
+      </button>
+
+      <button type="button" class="nav-item-btn" data-view="viewCart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span>Keranjang</span>
+        <span class="nav-badge-count" id="cartBadgeCount">0</span>
+      </button>
+
+      <button type="button" class="nav-item-btn" data-view="viewTrack">
+        <i class="fa-solid fa-truck-fast"></i>
+        <span>Lacak Pesanan</span>
+      </button>
+
+      <button type="button" class="nav-item-btn" data-view="viewAccount">
+        <i class="fa-solid fa-user-shield"></i>
+        <span>Akun / POS</span>
+      </button>
+    </nav>
+
+
+    <!-- =======================================================================
+         MODAL 1: NOTA PDF SPJ RESMI BER-KOP TOKO DELINA ATK & FOTOKOPI
+         ======================================================================= -->
+    <div class="modal-overlay" id="modalSpjPdf">
+      <div class="modal-card" style="max-width:560px;">
+        <div class="sheet-header">
+          <span class="sheet-header-title">
+            <i class="fa-solid fa-file-contract text-emerald"></i> Dokumen Resmi Nota / Kuitansi SPJ Instansi
+          </span>
+          <button type="button" class="sheet-close-btn" data-close="modalSpjPdf">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div style="padding:16px;">
+          <div class="spj-print-document" id="printableSpjDoc">
+            <div class="spj-kop-header">
+              <div class="spj-kop-title" id="spjKopStoreName">TOKO DELINA ATK & FOTOKOPI</div>
+              <div style="font-size:10pt; font-weight:bold; letter-spacing:1px; color:#046a38;" id="spjKopTagline">
+                KIKO SMART STATIONERY • PUSAT ATK & PERCETAKAN SYARIAH
+              </div>
+              <div class="spj-kop-sub" id="spjKopAddress">
+                Jl. Lintas Sumatera, Kel. Tanjung Raja, Kec. Tanjung Raja, Kab. Ogan Ilir, Sumatera Selatan<br>
+                WhatsApp CS: 0812-7890-1234 • Email: tokodelina.tanjungraja@gmail.com
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:9.5pt;">
+              <div>
+                <strong>Kepada Yth:</strong><br>
+                <span id="spjCustomerName">Bendahara SDN 01 Tanjung Raja</span><br>
+                Kec. Tanjung Raja, Kab. Ogan Ilir
+              </div>
+              <div style="text-align:right;">
+                <strong>NOTA / KUITANSI RESMI SPJ</strong><br>
+                No: <span id="spjInvoiceNumber">SPJ-20261027-088</span><br>
+                Tanggal: <span id="spjDate">27 Oktober 2026</span>
+              </div>
+            </div>
+
+            <div style="font-style:italic; font-size:9pt; margin-bottom:8px; text-align:center;">
+              "Bismillahir-Rahmaanir-Rahiim — Transaksi Sah, Jujur, Transparan & Bebas Riba"
+            </div>
+
+            <table class="spj-table">
+              <thead>
+                <tr style="background:#f1f5f9;">
+                  <th style="width:6%;">No</th>
+                  <th>Uraian Barang ATK / Jasa Cetak</th>
+                  <th style="width:12%;">Qty</th>
+                  <th style="width:14%;">Satuan</th>
+                  <th style="width:20%;">Harga SPJ</th>
+                  <th style="width:22%;">Jumlah (Rp)</th>
+                </tr>
+              </thead>
+              <tbody id="spjTableBody">
+                <tr>
+                  <td style="text-align:center;">1</td>
+                  <td>Kertas HVS Sinar Dunia PaperOne A4 80gsm</td>
+                  <td style="text-align:center;">5</td>
+                  <td style="text-align:center;">Rim</td>
+                  <td style="text-align:right;">51.000</td>
+                  <td style="text-align:right;">255.000</td>
+                </tr>
+                <tr>
+                  <td style="text-align:center;">2</td>
+                  <td>Pulpen Pilot Ballliner G2 0.5mm Hitam</td>
+                  <td style="text-align:center;">2</td>
+                  <td style="text-align:center;">Kotak</td>
+                  <td style="text-align:right;">28.500</td>
+                  <td style="text-align:right;">57.000</td>
+                </tr>
+                <tr>
+                  <td style="text-align:center;">3</td>
+                  <td>Jasa Cetak Berkas Soal Ujian & Jilid Spiral</td>
+                  <td style="text-align:center;">1</td>
+                  <td style="text-align:center;">Paket</td>
+                  <td style="text-align:right;">110.000</td>
+                  <td style="text-align:right;">110.000</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="5" style="text-align:right; font-weight:bold;">TOTAL PEMBAYARAN SPJ (LUNAS):</td>
+                  <td style="text-align:right; font-weight:bold;" id="spjGrandTotal">Rp 422.000</td>
+                </tr>
+                <tr>
+                  <td colspan="6" style="font-size:8.5pt; font-style:italic;">
+                    Terbilang: <strong>Empat Ratus Dua Puluh Dua Ribu Rupiah</strong> • Komisi Perwakilan Instansi Tercatat Transparan (QS. Al-Isra: 34)
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+
+            <div style="display:flex; justify-content:space-between; margin-top:16px; font-size:9.5pt;">
+              <div style="text-align:center; width:45%;">
+                Bendahara / Penerima,<br><br><br>
+                ( <u>Dra. Hj. Nurjanah, M.Pd</u> )<br>
+                NIP. 19740512 200003 2 001
+              </div>
+              <div style="text-align:center; width:45%;">
+                Tanjung Raja, 27 Okt 2026<br>
+                Toko Delina ATK & Fotokopi,<br>
+                <div class="stempel-lunas-box" style="margin: 4px 0;">
+                  LUNAS & SAH<br>TOKO DELINA ATK
+                </div><br>
+                ( <u>Bpk. Deri / Ibu Delina</u> )
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Kirim Langsung ke Email Bendahara -->
+          <div style="margin-top:12px; display:flex; gap:8px;">
+            <input type="email" class="search-input" id="inputSpjTargetEmail" value="bendahara@sdn01tanjungraja.sch.id" style="padding:8px 12px; font-size:0.76rem;">
+            <button type="button" class="btn-spj-email" id="btnSendSpjEmailAction" style="background:var(--primary); white-space:nowrap; padding:0 14px;">
+              <i class="fa-solid fa-paper-plane"></i> Kirim Email PDF
+            </button>
+          </div>
+
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <button type="button" class="btn-spj-download" id="btnPrintSpjAction" style="flex:1; height:40px;">
+              <i class="fa-solid fa-print"></i> Cetak / Unduh Nota PDF SPJ
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =======================================================================
+         MODAL 2: STRUK DIGITAL / THERMAL SYARIAH COMPONENT (DESIGNnew.md)
+         ======================================================================= -->
+    <div class="modal-overlay" id="modalThermalReceipt">
+      <div class="modal-card" style="max-width:380px;">
+        <div class="sheet-header">
+          <span class="sheet-header-title">
+            <i class="fa-solid fa-receipt text-emerald"></i> Struk Thermal & Digital Syariah
+          </span>
+          <button type="button" class="sheet-close-btn" data-close="modalThermalReceipt">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div style="padding:16px;">
+          <div class="thermal-ticket-box" id="thermalTicketContent">
+            <div style="text-align:center; border-bottom:1px dashed #94a3b8; padding-bottom:8px; margin-bottom:8px;">
+              <div style="font-family:var(--font-arabic); font-size:1rem; color:var(--primary-dark);">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+              <strong style="font-size:0.88rem;" id="thermalStoreName">TOKO DELINA ATK & FOTOKOPI</strong><br>
+              <span style="font-size:0.68rem;">Jl. Lintas Sumatera, Tanjung Raja, Ogan Ilir</span><br>
+              <span style="font-size:0.65rem;">WA: 0812-7890-1234</span>
+            </div>
+            <div style="font-size:0.68rem; margin-bottom:8px;">
+              No: <strong id="thermalInvNo">#INV-20261027-088</strong><br>
+              Kasir: Ahmad (POS-01) • Pelanggan: SDN 01<br>
+              Metode: QRIS Syariah (Terverifikasi Vision AI)
+            </div>
+            <div style="border-top:1px dashed #94a3b8; border-bottom:1px dashed #94a3b8; padding:6px 0; margin-bottom:8px;" id="thermalItemsList">
+              <div style="display:flex; justify-content:space-between;"><span>HVS A4 80g x2</span><span>Rp 108.000</span></div>
+              <div style="display:flex; justify-content:space-between;"><span>Pilot G2 Hitam x1</span><span>Rp 32.000</span></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:0.85rem; margin-bottom:8px;">
+              <span>TOTAL (BEBAS RIBA):</span>
+              <span id="thermalTotalVal">Rp 140.000</span>
+            </div>
+            <!-- Dynamic QRIS Barcode Box -->
+            <div style="text-align:center; background:#ffffff; border:1px solid #e2e8f0; padding:8px; border-radius:8px; margin-bottom:8px;">
+              <i class="fa-solid fa-qrcode" style="font-size:3.2rem; color:#111827;"></i>
+              <div style="font-size:0.62rem; color:var(--slate-muted); margin-top:2px;">QRIS Resmi Toko Delina Tanjung Raja</div>
+            </div>
+            <div style="text-align:center; font-size:0.66rem; font-style:italic; color:var(--primary-dark);" id="thermalFooterNote">
+              "Transaksi Sah, Halal & Bebas Riba • Jazakumullahu Khairan Katsiran"
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px;">
+            <button type="button" class="btn-spj-download" id="btnPrintThermalNow">
+              <i class="fa-solid fa-print"></i> Print Thermal
+            </button>
+            <button type="button" class="btn-sheet-add-cart" id="btnSendWaOneClick" style="background:#25d366;">
+              <i class="fa-brands fa-whatsapp"></i> Kirim WA 1-Klik
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =======================================================================
+         MODAL 3: PILIHAN HADIAH LOYALTY 15x & FORM TAMBAH ULASAN BINTANG 5
+         ======================================================================= -->
+    <div class="modal-overlay" id="modalLoyaltyGifts">
+      <div class="modal-card">
+        <div class="sheet-header">
+          <span class="sheet-header-title">
+            <i class="fa-solid fa-gift text-gold"></i> Katalog Hadiah `Loyalty_Gifts` (15x Transaksi ★5)
+          </span>
+          <button type="button" class="sheet-close-btn" data-close="modalLoyaltyGifts">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div style="padding:16px;">
+          <div style="width:100%; aspect-ratio:16/9; border-radius:var(--radius-md); overflow:hidden; margin-bottom:10px; border:1.5px solid var(--gold);">
+            <img src="assets/loyalty_gift.jpg" alt="Hadiah Loyalty" style="width:100%; height:100%; object-fit:cover;">
+          </div>
+
+          <div class="dzikir-mandate-alert" style="margin-bottom:10px;">
+            <i class="fa-solid fa-hand-holding-heart text-gold"></i>
+            <span>"Saling memberi hadiahlah kalian, niscaya kalian akan saling mencintai." (HR. Bukhari)</span>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;" id="loyaltyGiftsList"></div>
+
+          <button type="button" class="btn-sheet-add-cart" id="btnClaimLoyaltyReward" style="width:100%; height:42px;">
+            <i class="fa-solid fa-award"></i> Klaim Hadiah Pilihan Saya Sekarang
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL TAMBAH ULASAN BINTANG 5 & FOTO CETAKAN KE MARQUEE -->
+    <div class="modal-overlay" id="modalAddReview">
+      <div class="modal-card">
+        <div class="sheet-header">
+          <span class="sheet-header-title">
+            <i class="fa-solid fa-star text-gold"></i> Beri Rating Bintang 5 & Unggah Foto Cetakan/Struk
+          </span>
+          <button type="button" class="sheet-close-btn" data-close="modalAddReview">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div style="padding:16px; display:flex; flex-direction:column; gap:10px;">
+          <div class="dzikir-mandate-alert">
+            <i class="fa-solid fa-circle-check text-emerald"></i>
+            <span>Setiap ulasan Bintang 5 menambah <strong>+1 Counter Loyalty</strong> menuju 15x transaksi dan langsung tampil di <strong>Running Card Marquee</strong> beranda!</span>
+          </div>
+          <div>
+            <label style="font-size:0.72rem; font-weight:700;">Nama Pelanggan / Instansi</label>
+            <input type="text" class="search-input" id="revInputName" value="Dra. Hj. Nurjanah, M.Pd" style="padding:8px 12px;">
+          </div>
+          <div>
+            <label style="font-size:0.72rem; font-weight:700;">Instansi / Status</label>
+            <input type="text" class="search-input" id="revInputRole" value="Bendahara SDN 01 Tanjung Raja" style="padding:8px 12px;">
+          </div>
+          <div>
+            <label style="font-size:0.72rem; font-weight:700;">Teks Ulasan Bintang 5 (★★★★★)</label>
+            <textarea class="search-input" id="revInputComment" rows="2" style="padding:8px 12px;">Alhamdulillah cetakan berkas ujian rapi, kertas HVS tebal, dan Nota SPJ langsung dikirim ke email sekolah!</textarea>
+          </div>
+          <div>
+            <label style="font-size:0.72rem; font-weight:700;">Unggah Foto Hasil Cetakan / Struk (Opsional)</label>
+            <input type="file" class="search-input" id="revInputPhoto" accept="image/*" style="padding:6px;">
+          </div>
+          <button type="button" class="btn-sheet-add-cart" id="btnSubmitReviewMarquee" style="height:42px;">
+            <i class="fa-solid fa-paper-plane"></i> Kirim Ulasan ★5 & Tampilkan di Marquee
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =======================================================================
+         MODAL 4: TERMINAL POS KASIR & OPERATOR FOTOKOPI (RBAC TINGKAT 3)
+         Dilengkapi Katalog Barang Visual (Tinggal Klik) & Tab Antrean Cetak
+         ======================================================================= -->
+    <div class="modal-overlay" id="modalPosKasir">
+      <div class="modal-card" style="max-width:600px;">
+        <div class="sheet-header" style="background:#0f172a; color:#ffffff;">
+          <span class="sheet-header-title" style="color:#fef08a;">
+            <i class="fa-solid fa-cash-register"></i> Terminal POS Kasir & Operator Fotokopi
+          </span>
+          <button type="button" class="sheet-close-btn" data-close="modalPosKasir" style="color:#cbd5e1;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- 3 Sub-Tabs di dalam Terminal POS Kasir -->
+        <div class="dashboard-subtabs" id="posSubtabsNav">
+          <button type="button" class="dashboard-subtab-btn active" data-postab="posTabKasir">
+            <i class="fa-solid fa-cart-plus"></i> 1. Kasir POS (Klik Barang)
+          </button>
+          <button type="button" class="dashboard-subtab-btn" data-postab="posTabAntrean">
+            <i class="fa-solid fa-print"></i> 2. Antrean Cetak & Online (<span id="posQueueCountBadge">3</span>)
+          </button>
+          <button type="button" class="dashboard-subtab-btn" data-postab="posTabClosing">
+            <i class="fa-solid fa-vault"></i> 3. Tutup Kasir & RBAC
+          </button>
+        </div>
+
+        <div style="padding:14px;">
+          <!-- 4 KPI Cards Cepat (PRD Bab 6.3.1) -->
+          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-bottom:12px;">
+            <div class="weather-stat-box" style="padding:6px;">
+              <div class="stat-label">Antrean Cetak</div>
+              <div class="stat-value" style="color:var(--primary);" id="posKpiQueue">3 Berkas</div>
+            </div>
+            <div class="weather-stat-box" style="padding:6px;">
+              <div class="stat-label">Siap Ambil</div>
+              <div class="stat-value" style="color:var(--info);" id="posKpiReady">5 Paket</div>
+            </div>
+            <div class="weather-stat-box" style="padding:6px;">
+              <div class="stat-label">Bukti OCR</div>
+              <div class="stat-value" style="color:var(--success);" id="posKpiOcr">12 Lunas</div>
+            </div>
+            <div class="weather-stat-box" style="padding:6px;">
+              <div class="stat-label">Omzet Shift</div>
+              <div class="stat-value" style="color:#b45309;" id="posKpiShift">Rp 2,8 Jt</div>
+            </div>
+          </div>
+
+          <!-- ===============================================================
+               POS TAB 1: KASIR TATAP MUKA (KATALOG BARANG VISUAL + NOTA KASIR)
+               =============================================================== -->
+          <div class="subtab-pane active" id="posTabKasir">
+            <div class="dzikir-mandate-alert" style="margin-bottom:8px; padding:6px 10px;">
+              <i class="fa-solid fa-hand-pointer text-emerald"></i>
+              <span><strong>Cara Pakai Kasir:</strong> Klik langsung barang/jasa di bawah untuk memasukkan ke nota kasir, lalu pilih uang diterima & cetak struk!</span>
+            </div>
+
+            <!-- Filter Kategori & Pencarian Cepat di POS Kasir -->
+            <div style="display:flex; gap:6px; margin-bottom:8px;">
+              <select class="search-input" id="posCatalogCatFilter" style="padding:7px 10px; width:42%; font-size:0.74rem; font-weight:700;">
+                <option value="all">Semua Kategori</option>
+                <option value="kertas">Kertas & Buku</option>
+                <option value="alat-tulis">Alat Tulis</option>
+                <option value="cetak">Jasa Cetak & Jilid</option>
+                <option value="kantor">Alat Kantor</option>
+                <option value="tinta">Tinta Printer</option>
+              </select>
+              <input type="text" class="search-input" id="posBarcodeQuery" placeholder="Cari Nama Barang / Scan Barcode..." style="padding:7px 10px; flex:1; font-size:0.75rem;">
+              <button type="button" class="btn-spj-download" id="btnPosAddItem" style="white-space:nowrap; padding:0 10px;">
+                <i class="fa-solid fa-barcode"></i> + Scan
+              </button>
+            </div>
+
+            <!-- GRID KATALOG BARANG VISUAL DI POS KASIR (Tinggal Klik!) -->
+            <div class="pos-catalog-grid" id="posVisualCatalogGrid">
+              <!-- Diisi otomatis dari MASTER_PRODUCTS oleh app.js -->
+            </div>
+
+            <!-- Pengaturan Pelanggan & Kategori Harga (Eceran vs Grosir Instansi SPJ) -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px;">
+              <div>
+                <label style="font-size:0.66rem; font-weight:700; color:var(--slate-muted);">Pelanggan / Instansi:</label>
+                <select class="search-input" id="posCustomerSelect" style="padding:6px 8px; font-size:0.72rem; font-weight:700;">
+                  <option value="Pelanggan Umum (Walk-in)">Pelanggan Umum (Walk-in)</option>
+                  <option value="SDN 01 Tanjung Raja">SDN 01 Tanjung Raja (Mitra SPJ)</option>
+                  <option value="Kantor Desa Tanjung Raja Selatan">Kantor Desa Tj. Raja Selatan (SPJ)</option>
+                  <option value="SMPN 2 Tanjung Raja">SMPN 2 Tanjung Raja (Mitra SPJ)</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:0.66rem; font-weight:700; color:var(--slate-muted);">Kategori Harga Resmi:</label>
+                <select class="search-input" id="posPriceCategory" style="padding:6px 8px; font-size:0.72rem; font-weight:700;">
+                  <option value="eceran">Harga Eceran Resmi</option>
+                  <option value="spj">Harga Grosir Instansi SPJ</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Daftar Item di Keranjang Nota Kasir -->
+            <div style="font-size:0.72rem; font-weight:800; color:var(--primary-dark); margin-bottom:4px; display:flex; justify-content:space-between;">
+              <span><i class="fa-solid fa-receipt"></i> Rincian Barang di Nota Kasir Saat Ini:</span>
+              <button type="button" id="btnClearPosCart" style="background:none; border:none; color:var(--danger); font-size:0.68rem; font-weight:700; cursor:pointer;">Kosongkan Nota</button>
+            </div>
+            <div style="max-height:150px; overflow-y:auto; border:1px solid var(--surface-border); border-radius:var(--radius-sm); padding:8px; margin-bottom:10px; background:#ffffff;" id="posCartList"></div>
+
+            <!-- Kalkulator Uang Tunai, Tombol Nominal Cepat, & Kembalian Instan -->
+            <div style="background:#f8fafc; border:1.5px solid var(--gold); border-radius:var(--radius-md); padding:10px; margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="font-size:0.82rem; font-weight:800;">Total Tagihan POS:</span>
+                <span style="color:var(--primary); font-family:var(--font-mono); font-size:1.18rem; font-weight:800;" id="posTotalTagihan">Rp 140.000</span>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:6px;">
+                <div>
+                  <label style="font-size:0.65rem; color:var(--slate-muted);">Metode Bayar:</label>
+                  <select class="search-input" id="posPaymentMethod" style="padding:5px 8px; font-size:0.72rem; font-weight:700;">
+                    <option value="Tunai (Cash)">Tunai (Cash)</option>
+                    <option value="QRIS Syariah">QRIS Syariah</option>
+                    <option value="Transfer Bank">Transfer Bank</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:0.65rem; color:var(--slate-muted);">Uang Diterima (Rp):</label>
+                  <input type="number" class="search-input" id="posCashReceived" value="150000" style="padding:5px 8px; font-weight:800; font-family:var(--font-mono); font-size:0.78rem;">
+                </div>
+                <div>
+                  <label style="font-size:0.65rem; color:var(--slate-muted);">Kembalian:</label>
+                  <div style="font-family:var(--font-mono); font-weight:800; font-size:0.92rem; color:#166534; padding:4px 0;" id="posCashChange">
+                    Rp 10.000
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tombol Nominal Uang Tunai Cepat -->
+              <div class="cash-quick-chips">
+                <button type="button" class="cash-chip-btn" data-cash="exact">Uang Pas</button>
+                <button type="button" class="cash-chip-btn" data-cash="50000">Rp 50.000</button>
+                <button type="button" class="cash-chip-btn" data-cash="100000">Rp 100.000</button>
+                <button type="button" class="cash-chip-btn" data-cash="150000">Rp 150.000</button>
+                <button type="button" class="cash-chip-btn" data-cash="200000">Rp 200.000</button>
+                <button type="button" class="cash-chip-btn" data-cash="500000">Rp 500.000</button>
+              </div>
+            </div>
+
+            <!-- Tombol Utama Kasir: Simpan & Cetak Struk + Kirim WA 1-Klik -->
+            <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:8px;">
+              <button type="button" class="btn-spj-download" id="btnPrintPosReceipt" style="height:42px;">
+                <i class="fa-solid fa-print"></i> Bayar & Cetak Struk
+              </button>
+              <button type="button" class="btn-spj-email" id="btnSharePosWa" style="background:#25d366; height:42px; font-weight:700;">
+                <i class="fa-brands fa-whatsapp"></i> Kirim Struk WA 1-Klik
+              </button>
+            </div>
+          </div>
+
+          <!-- ===============================================================
+               POS TAB 2: ANTREAN CETAK & PESANAN ONLINE (`Antrean_Cetak`)
+               =============================================================== -->
+          <div class="subtab-pane" id="posTabAntrean">
+            <div class="dzikir-mandate-alert" style="margin-bottom:10px;">
+              <i class="fa-solid fa-print text-gold"></i>
+              <span><strong>Tugas Operator Fotokopi:</strong> Memproses berkas pesanan cetak/online yang masuk, mengubah status pengerjaan, & mengunggah foto hasil cetakan/struk agar tampil di <strong>Lacak Pesanan</strong> dan <strong>Running Card Marquee</strong>.</span>
+            </div>
+
+            <!-- Daftar Antrean Cetak & Pesanan Masuk -->
+            <div id="posPrintQueueList" style="display:flex; flex-direction:column; gap:10px; margin-bottom:12px; max-height:300px; overflow-y:auto;"></div>
+
+            <!-- Upload Cepat Foto Hasil Cetakan / Struk Manual -->
+            <div style="background:#f8fafc; border:1px dashed var(--primary); border-radius:var(--radius-md); padding:10px;">
+              <div style="font-size:0.74rem; font-weight:800; color:var(--primary-dark); margin-bottom:6px;">
+                <i class="fa-solid fa-camera text-emerald"></i> Unggah Cepat Foto Hasil Cetakan / Struk ke Marquee Beranda
+              </div>
+              <div style="display:flex; gap:6px; margin-bottom:6px;">
+                <input type="text" class="search-input" id="posPhotoCaption" placeholder="Keterangan (misal: Jilid Skripsi 3 Buku Selesai Rapi)" style="padding:6px 10px; font-size:0.72rem; flex:1;">
+                <input type="file" class="search-input" id="posPhotoFileInput" accept="image/*" style="padding:4px; width:42%; font-size:0.66rem;">
+              </div>
+              <button type="button" class="azan-toggle-btn" id="btnUploadFinishedJob" style="width:100%; justify-content:center; padding:8px; background:var(--primary);">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Unggah Foto Hasil Cetakan & Tampilkan di Marquee
+              </button>
+            </div>
+          </div>
+
+          <!-- ===============================================================
+               POS TAB 3: LAPORAN TUTUP KASIR HARIAN (`Shift Closing`) & RBAC
+               =============================================================== -->
+          <div class="subtab-pane" id="posTabClosing">
+            <div style="background:#fefce8; border:1.5px solid var(--gold); border-radius:var(--radius-md); padding:12px; font-size:0.74rem; margin-bottom:12px;">
+              <div style="font-weight:800; color:#854d0e; margin-bottom:6px; font-size:0.8rem;">
+                <i class="fa-solid fa-vault"></i> Laporan Tutup Kasir Harian (Shift Closing Report)
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #fde047;">
+                <span>Uang Tunai di Laci Kasir (Cash):</span>
+                <strong id="closingCashTotal">Rp 1.650.000</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #fde047;">
+                <span>Pembayaran Non-Tunai (QRIS / Transfer OCR):</span>
+                <strong id="closingNonCashTotal">Rp 1.150.000</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:6px 0 0 0; font-size:0.82rem; color:var(--primary-dark);">
+                <strong>Total Omzet Shift Kasir:</strong>
+                <strong id="closingGrandTotal">Rp 2.800.000</strong>
+              </div>
+              <div style="font-size:0.64rem; color:#a16207; margin-top:4px; font-style:italic;">
+                *Sesuai matriks RBAC PRD Bab 3.3, HPP (Modal) dan Laba Bersih disembunyikan dari layar Kasir.
+              </div>
+            </div>
+
+            <!-- Demonstrasi Pembatasan Hak Akses RBAC Kasir -->
+            <div style="background:#fee2e2; border:1px solid #fca5a5; border-radius:var(--radius-md); padding:12px; font-size:0.72rem; color:#991b1b;">
+              <div style="font-weight:800; margin-bottom:6px;">
+                <i class="fa-solid fa-ban"></i> Proteksi RBAC Kasir Aktif (Sesuai Matriks PRD Bab 3.3):
+              </div>
+              <p style="font-size:0.68rem; margin-bottom:8px;">
+                Kasir tidak diizinkan mengubah harga master/HPP dan tidak dapat menghapus/void transaksi yang sudah tercatat lunas.
+              </p>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                <button type="button" class="azan-toggle-btn" id="btnKasirTryEditPrice" style="background:#991b1b; justify-content:center; padding:8px;">
+                  <i class="fa-solid fa-lock"></i> Uji Ubah HPP/Harga (Ditolak)
+                </button>
+                <button type="button" class="azan-toggle-btn" id="btnKasirRequestCorrection" style="background:#b45309; justify-content:center; padding:8px;">
+                  <i class="fa-solid fa-paper-plane"></i> Ajukan Koreksi ke Owner
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =======================================================================
+         MODAL 5: DASHBOARD SUPER ADMIN / OWNER & CMS DINAMIS (RBAC TINGKAT 4)
+         Dilengkapi 5 Tab Lengkap: Input Barang CRUD, Tarif Cetak & Hadiah,
+         Komisi SPJ, 3 Grafik Chart.js & Keuangan, serta CMS Branding
+         ======================================================================= -->
+    <div class="modal-overlay" id="modalOwnerDashboard">
+      <div class="modal-card" style="max-width:640px;">
+        <div class="sheet-header" style="background:#0f172a; color:#ffffff;">
+          <span class="sheet-header-title" style="color:#fef08a;">
+            <i class="fa-solid fa-crown text-gold"></i> Dashboard Super Admin / Owner & CMS Dinamis
+          </span>
+          <button type="button" class="sheet-close-btn" data-close="modalOwnerDashboard" style="color:#cbd5e1;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- 5 Sub-Tabs di dalam Dashboard Super Admin / Owner -->
+        <div class="dashboard-subtabs" id="ownerSubtabsNav">
+          <button type="button" class="dashboard-subtab-btn active" data-ownertab="ownerTabProducts">
+            <i class="fa-solid fa-boxes-stacked"></i> 1. Input & Stok Barang
+          </button>
+          <button type="button" class="dashboard-subtab-btn" data-ownertab="ownerTabServices">
+            <i class="fa-solid fa-print"></i> 2. Tarif Cetak & Hadiah
+          </button>
+          <button type="button" class="dashboard-subtab-btn" data-ownertab="ownerTabInstansi">
+            <i class="fa-solid fa-building-columns"></i> 3. Komisi Instansi SPJ
+          </button>
+          <button type="button" class="dashboard-subtab-btn" data-ownertab="ownerTabAnalytics">
+            <i class="fa-solid fa-chart-line"></i> 4. Grafik & Keuangan
+          </button>
+          <button type="button" class="dashboard-subtab-btn" data-ownertab="ownerTabCms">
+            <i class="fa-solid fa-palette"></i> 5. CMS Branding Toko
+          </button>
+        </div>
+
+        <div style="padding:14px;">
+
+          <!-- ===============================================================
+               OWNER TAB 1: INPUT & KELOLA BARANG JUALAN (`Master_Produk`)
+               =============================================================== -->
+          <div class="subtab-pane active" id="ownerTabProducts">
+            <div class="dzikir-mandate-alert" style="margin-bottom:10px;">
+              <i class="fa-solid fa-circle-plus text-emerald"></i>
+              <span><strong>Input Barang Jualan (`Master_Produk`):</strong> Setiap barang yang Anda tambahkan atau edit di form bawah ini akan <strong>langsung tampil di Etalase Depan (Grid 2 Kolom) dan Katalog POS Kasir</strong>!</span>
+            </div>
+
+            <!-- Form Input / Edit Produk Jualan -->
+            <div class="admin-crud-card">
+              <div style="font-size:0.82rem; font-weight:800; color:var(--primary-dark); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                <span id="ownerProdFormTitle"><i class="fa-solid fa-box-open text-gold"></i> Form Tambah Barang Jualan Baru</span>
+                <button type="button" id="btnResetProdForm" style="background:none; border:none; color:var(--slate-muted); font-size:0.68rem; font-weight:700; cursor:pointer;">Bersihkan Form</button>
+              </div>
+
+              <input type="hidden" id="prodEditId" value="">
+
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:8px;">
+                  <div>
+                    <label style="font-size:0.68rem; font-weight:700;">Nama Barang / Layanan *</label>
+                    <input type="text" class="search-input" id="prodInputName" placeholder="Contoh: Buku Tulis SiDU 58 Lembar" style="padding:6px 10px; font-size:0.75rem;">
+                  </div>
+                  <div>
+                    <label style="font-size:0.68rem; font-weight:700;">Kategori Etalase *</label>
+                    <select class="search-input" id="prodInputCat" style="padding:6px 10px; font-size:0.75rem;">
+                      <option value="kertas">Kertas & Buku</option>
+                      <option value="alat-tulis">Alat Tulis</option>
+                      <option value="cetak">Jasa Cetak & Jilid</option>
+                      <option value="kantor">Perlengkapan Kantor</option>
+                      <option value="tinta">Tinta & Aksesoris</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px;">
+                  <div>
+                    <label style="font-size:0.66rem; font-weight:700;">Merk / Brand</label>
+                    <input type="text" class="search-input" id="prodInputBrand" placeholder="Sinar Dunia / Joyko" style="padding:6px 8px; font-size:0.74rem;">
+                  </div>
+                  <div>
+                    <label style="font-size:0.66rem; font-weight:700;">Satuan Jual</label>
+                    <input type="text" class="search-input" id="prodInputUnit" placeholder="Rim / Pack / Kotak / Pcs" style="padding:6px 8px; font-size:0.74rem;">
+                  </div>
+                  <div>
+                    <label style="font-size:0.66rem; font-weight:700;">Stok Fisik Ready *</label>
+                    <input type="number" class="search-input" id="prodInputStock" value="25" min="0" style="padding:6px 8px; font-size:0.74rem; font-weight:800;">
+                  </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px;">
+                  <div>
+                    <label style="font-size:0.66rem; font-weight:700; color:var(--slate-muted);">HPP / Modal (Rp)</label>
+                    <input type="number" class="search-input" id="prodInputHpp" placeholder="30000" style="padding:6px 8px; font-size:0.74rem;">
+                  </div>
+                  <div>
+                    <label style="font-size:0.66rem; font-weight:700; color:var(--primary);">Harga Eceran (Rp) *</label>
+                    <input type="number" class="search-input" id="prodInputEceran" placeholder="38000" style="padding:6px 8px; font-size:0.74rem; font-weight:800;">
+                  </div>
+                  <div>
+                    <label style="font-size:0.66rem; font-weight:700; color:#b45309;">Harga Grosir SPJ (Rp) *</label>
+                    <input type="number" class="search-input" id="prodInputGrosir" placeholder="35000" style="padding:6px 8px; font-size:0.74rem; font-weight:800;">
+                  </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                  <div>
+                    <label style="font-size:0.66rem; font-weight:700;">URL Foto Barang</label>
+                    <input type="text" class="search-input" id="prodInputImageUrl" value="assets/product_hvs.jpg" style="padding:6px 8px; font-size:0.72rem;">
+                  </div>
+                  <div>
+                    <label style="font-size:0.66rem; font-weight:700;">Atau Upload Foto Barang dari HP/PC</label>
+                    <input type="file" class="search-input" id="prodInputImageFile" accept="image/*" style="padding:4px 6px; font-size:0.66rem;">
+                  </div>
+                </div>
+
+                <div>
+                  <label style="font-size:0.66rem; font-weight:700;">Spesifikasi Detail Barang (Pisahkan dengan tanda <code>|</code> untuk tampil di Tabel Bottom-Sheet)</label>
+                  <input type="text" class="search-input" id="prodInputSpecs" placeholder="Merk: Sinar Dunia | Ukuran: Kwarto | Isi: 10 Buku / Pack" style="padding:6px 10px; font-size:0.72rem;">
+                </div>
+
+                <div>
+                  <label style="font-size:0.66rem; font-weight:700;">Deskripsi Lengkap Produk</label>
+                  <textarea class="search-input" id="prodInputDesc" rows="2" placeholder="Tuliskan keunggulan dan kegunaan barang ini..." style="padding:6px 10px; font-size:0.72rem;"></textarea>
+                </div>
+
+                <button type="button" class="btn-sheet-add-cart" id="btnSaveMasterProduct" style="height:40px;">
+                  <i class="fa-solid fa-floppy-disk"></i> Simpan Barang & Tampilkan di Etalase Depan
+                </button>
+              </div>
+            </div>
+
+            <!-- Tabel Daftar Barang yang Tampil di Etalase Depan -->
+            <div style="font-size:0.8rem; font-weight:800; color:var(--charcoal); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+              <span><i class="fa-solid fa-list-check text-emerald"></i> Daftar Barang Aktif di Etalase (<span id="ownerTotalProductsCount">10</span> Produk)</span>
+              <span style="font-size:0.65rem; color:var(--slate-muted);">Klik Edit atau Set Stok=0</span>
+            </div>
+            <div id="ownerProductsTableList" style="max-height:280px; overflow-y:auto;"></div>
+          </div>
+
+          <!-- ===============================================================
+               OWNER TAB 2: KELOLA TARIF CETAK & HADIAH LOYALTY 15x
+               =============================================================== -->
+          <div class="subtab-pane" id="ownerTabServices">
+            <div class="admin-crud-card">
+              <div style="font-size:0.8rem; font-weight:800; color:var(--primary-dark); margin-bottom:8px;">
+                <i class="fa-solid fa-print text-gold"></i> Tambah / Ubah Tarif Layanan Cetak (`Master_Layanan_Cetak`)
+              </div>
+              <div style="display:grid; grid-template-columns:1.5fr 1fr auto; gap:6px; margin-bottom:10px;">
+                <input type="text" class="search-input" id="srvInputName" placeholder="Nama Layanan (misal: Print Warna A3 Poster)" style="padding:6px 10px; font-size:0.72rem;">
+                <input type="number" class="search-input" id="srvInputPrice" placeholder="Tarif (Rp)" style="padding:6px 10px; font-size:0.72rem;">
+                <button type="button" class="btn-sheet-add-cart" id="btnAddPrintService" style="padding:0 12px; height:34px; font-size:0.72rem;">
+                  + Tambah
+                </button>
+              </div>
+              <div id="ownerPrintServicesList" style="font-size:0.74rem;"></div>
+            </div>
+
+            <div class="admin-crud-card">
+              <div style="font-size:0.8rem; font-weight:800; color:var(--primary-dark); margin-bottom:8px;">
+                <i class="fa-solid fa-gift text-gold"></i> Kelola Daftar Hadiah Program Loyalty 15x (`Loyalty_Gifts`)
+              </div>
+              <div style="display:grid; grid-template-columns:1.4fr 1fr 0.7fr auto; gap:6px; margin-bottom:10px;">
+                <input type="text" class="search-input" id="giftInputName" placeholder="Nama Hadiah Baru" style="padding:6px 8px; font-size:0.72rem;">
+                <input type="text" class="search-input" id="giftInputDesc" placeholder="Keterangan Singkat" style="padding:6px 8px; font-size:0.72rem;">
+                <input type="number" class="search-input" id="giftInputStock" placeholder="Stok" value="10" style="padding:6px 8px; font-size:0.72rem;">
+                <button type="button" class="btn-sheet-add-cart" id="btnAddLoyaltyGift" style="padding:0 10px; height:34px; font-size:0.72rem;">
+                  + Hadiah
+                </button>
+              </div>
+              <div id="ownerLoyaltyGiftsAdminList"></div>
+            </div>
+          </div>
+
+          <!-- ===============================================================
+               OWNER TAB 3: KOMISI MITRA INSTANSI SPJ (`Data_Instansi_Komisi`)
+               =============================================================== -->
+          <div class="subtab-pane" id="ownerTabInstansi">
+            <div class="dzikir-mandate-alert" style="margin-bottom:10px;">
+              <i class="fa-solid fa-scale-balanced text-gold"></i>
+              <span><strong>Manajemen Komisi Pembeli Instansi (`Data_Instansi_Komisi`):</strong> Pantau saldo komisi perwakilan sekolah/desa dan klik <strong>Cairkan Komisi</strong> saat diserahkan.</span>
+            </div>
+            <div id="ownerInstansiCommissionList" style="display:flex; flex-direction:column; gap:8px;"></div>
+          </div>
+
+          <!-- ===============================================================
+               OWNER TAB 4: GRAFIK CHART.JS, LAPORAN KEUANGAN, & ANALITIK AI
+               =============================================================== -->
+          <div class="subtab-pane" id="ownerTabAnalytics">
+            <div style="background:#ecfdf5; border:1px solid #10b981; border-radius:var(--radius-sm); padding:8px 10px; font-size:0.7rem; color:#065f46; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;">
+              <span><i class="fa-solid fa-coins text-gold"></i> <strong>Laba Bersih Real-Time:</strong> <span id="ownerRealtimeNetProfit">Rp 950.000</span></span>
+              <button type="button" class="azan-toggle-btn" id="btnExportOwnerCsv" style="padding:4px 10px; font-size:0.66rem;">
+                <i class="fa-solid fa-file-csv"></i> Ekspor CSV Keuangan
+              </button>
+            </div>
+
+            <div class="chart-card-box">
+              <div style="font-size:0.76rem; font-weight:700; margin-bottom:6px; color:var(--primary-dark);">
+                Grafik 1 — Tren Omzet & Laba Bersih (ATK vs Fotokopi/Cetak dikurangi HPP & Komisi)
+              </div>
+              <div style="position:relative; height:170px;">
+                <canvas id="chartOmzetTrends"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card-box">
+              <div style="font-size:0.76rem; font-weight:700; margin-bottom:6px; color:var(--primary-dark);">
+                Grafik 2 — Top 5 Produk ATK & Layanan Cetak Terlaris
+              </div>
+              <div style="position:relative; height:160px;">
+                <canvas id="chartTopProducts"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card-box">
+              <div style="font-size:0.76rem; font-weight:700; margin-bottom:6px; color:var(--primary-dark);">
+                Grafik 3 — Porsi Pelanggan (Umum vs Instansi SPJ) & Progres Loyalty 15x
+              </div>
+              <div style="position:relative; height:160px;">
+                <canvas id="chartCustomerSegment"></canvas>
+              </div>
+            </div>
+
+            <!-- Panel Performa AI Kiko & Broadcast -->
+            <div style="background:#f8fafc; border:1px solid var(--surface-border); border-radius:var(--radius-md); padding:12px; margin-bottom:10px;">
+              <div style="font-size:0.78rem; font-weight:800; color:var(--charcoal); margin-bottom:8px;">
+                <i class="fa-solid fa-robot text-emerald"></i> Panel Performa AI Kiko & Otomasi Harian
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+                <button type="button" class="azan-toggle-btn" id="btnSimulateZeroStock" style="background:#dc2626; justify-content:center; padding:8px;">
+                  <i class="fa-solid fa-box-open"></i> Uji Set Stok=0 & Alert AI
+                </button>
+                <button type="button" class="azan-toggle-btn" id="btnBroadcastTelegramPromo" style="background:#0284c7; justify-content:center; padding:8px;">
+                  <i class="fa-brands fa-telegram"></i> Broadcast Promo Member
+                </button>
+              </div>
+              <button type="button" class="azan-toggle-btn" id="btnTestDailyEmail" style="width:100%; background:var(--primary); justify-content:center; padding:8px;">
+                <i class="fa-solid fa-envelope-circle-check"></i> Kirim Email Rekap Keuangan & PDF Backup 21.00 WIB Sekarang
+              </button>
+            </div>
+          </div>
+
+          <!-- ===============================================================
+               OWNER TAB 5: CMS PENGATURAN BRANDING DINAMIS (`Pengaturan_Toko`)
+               =============================================================== -->
+          <div class="subtab-pane" id="ownerTabCms">
+            <div class="admin-crud-card">
+              <div style="font-size:0.84rem; font-weight:800; color:var(--primary-dark); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-palette text-gold"></i> CMS Pengaturan Identitas, Rekening Bank, & QRIS (Tanpa Coding)
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <div>
+                  <label style="font-size:0.7rem; font-weight:700;">Nama Aplikasi / Nama Toko</label>
+                  <input type="text" class="search-input" id="cmsStoreName" value="Toko Delina ATK & Fotokopi" style="padding:6px 10px;">
+                </div>
+                <div>
+                  <label style="font-size:0.7rem; font-weight:700;">Tagline Toko</label>
+                  <input type="text" class="search-input" id="cmsStoreTagline" value="Kiko Smart Stationery • Tanjung Raja" style="padding:6px 10px;">
+                </div>
+                <div>
+                  <label style="font-size:0.7rem; font-weight:700;">Alamat Lengkap (Tampil di Kop SPJ & Struk)</label>
+                  <input type="text" class="search-input" id="cmsStoreAddress" value="Jl. Lintas Sumatera, Tanjung Raja, Kab. Ogan Ilir" style="padding:6px 10px;">
+                </div>
+                <div>
+                  <label style="font-size:0.7rem; font-weight:700;">Nomor WhatsApp CS / Kasir (Format 08... atau 628...)</label>
+                  <input type="text" class="search-input" id="cmsStorePhone" value="0812-7890-1234" style="padding:6px 10px;">
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                  <div>
+                    <label style="font-size:0.7rem; font-weight:700;">URL Logo / Drive Link</label>
+                    <input type="text" class="search-input" id="cmsStoreLogoUrl" value="assets/logo.jpg" style="padding:6px 10px;">
+                  </div>
+                  <div>
+                    <label style="font-size:0.7rem; font-weight:700;">Atau Upload File Logo Baru</label>
+                    <input type="file" class="search-input" id="cmsLogoFileUpload" accept="image/*" style="padding:4px 8px; font-size:0.68rem;">
+                  </div>
+                </div>
+
+                <!-- Pengaturan Nomor Rekening Bank & Gambar QRIS Toko -->
+                <div style="border-top:1px dashed #cbd5e1; padding-top:8px; margin-top:4px;">
+                  <div style="font-size:0.76rem; font-weight:800; color:var(--primary-dark); margin-bottom:6px;">
+                    <i class="fa-solid fa-building-columns text-emerald"></i> Pengaturan Rekening Bank & Gambar QRIS di Keranjang
+                  </div>
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:6px;">
+                    <div>
+                      <label style="font-size:0.66rem; font-weight:700;">Rekening 1 (Bank Sumsel Babel)</label>
+                      <input type="text" class="search-input" id="cmsBank1" value="150-09-88210-4 (a.n Toko Delina ATK)" style="padding:5px 8px; font-size:0.7rem;">
+                    </div>
+                    <div>
+                      <label style="font-size:0.66rem; font-weight:700;">Rekening 2 (BSI Syariah)</label>
+                      <input type="text" class="search-input" id="cmsBank2" value="719-8824-901 (a.n Deri / Delina ATK)" style="padding:5px 8px; font-size:0.7rem;">
+                    </div>
+                  </div>
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                    <div>
+                      <label style="font-size:0.66rem; font-weight:700;">Rekening 3 (BRI / Mandiri)</label>
+                      <input type="text" class="search-input" id="cmsBank3" value="5721-01-029384-53-9 (a.n Toko Delina)" style="padding:5px 8px; font-size:0.7rem;">
+                    </div>
+                    <div>
+                      <label style="font-size:0.66rem; font-weight:700;">Upload Gambar QRIS Toko (Opsional)</label>
+                      <input type="file" class="search-input" id="cmsQrisFileUpload" accept="image/*" style="padding:4px 6px; font-size:0.66rem;">
+                    </div>
+                  </div>
+                </div>
+
+                <button type="button" class="btn-sheet-add-cart" id="btnSaveCmsSettings" style="height:40px;">
+                  <i class="fa-solid fa-floppy-disk"></i> Simpan & Terapkan Branding + Rekening/QRIS
+                </button>
+              </div>
+            </div>
+
+            <!-- Reset Data Demo localStorage -->
+            <div style="background:#fff1f2; border:1px solid #fecdd3; border-radius:var(--radius-md); padding:10px; display:flex; justify-content:space-between; align-items:center;">
+              <div style="font-size:0.7rem; color:#9f1239;">
+                <strong>Reset Data Penyimpanan Lokal (`localStorage`):</strong><br>
+                Kembalikan daftar produk, antrean, dan branding ke pengaturan awal.
+              </div>
+              <button type="button" class="azan-toggle-btn" id="btnResetLocalStorage" style="background:#e11d48; white-space:nowrap;">
+                <i class="fa-solid fa-rotate-left"></i> Reset Default
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =======================================================================
+         MODAL ZOOM QRIS RESMI TOKO DELINA (TAMPIL BESAR & TEGAS)
+         ======================================================================= -->
+    <div class="modal-overlay" id="modalQrisZoom">
+      <div class="modal-card" style="max-width:360px; border:2.5px solid #111827;">
+        <div class="sheet-header">
+          <span class="sheet-header-title">
+            <i class="fa-solid fa-qrcode text-emerald"></i> Scan QRIS Resmi Syariah
+          </span>
+          <button type="button" class="sheet-close-btn" data-close="modalQrisZoom">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div style="padding:18px; text-align:center;">
+          <div style="background:#ffffff; border:2.5px solid #111827; border-radius:var(--radius-lg); padding:16px; margin-bottom:12px;">
+            <div style="font-size:0.82rem; font-weight:800; color:#111827;">QRIS NASIONAL STANDAR PEMBAYARAN</div>
+            <div style="font-size:0.75rem; font-weight:800; color:var(--primary); margin-bottom:10px;" id="modalQrisStoreTitle">TOKO DELINA ATK & FOTOKOPI</div>
+            <div id="modalQrisBigPreview" style="display:flex; justify-content:center; align-items:center; padding:12px; border:2px dashed #046a38; border-radius:12px; background:#f8fafc;">
+              <i class="fa-solid fa-qrcode" style="font-size:10.5rem; color:#111827;"></i>
+            </div>
+            <div style="font-family:var(--font-mono); font-size:0.72rem; font-weight:700; color:#334155; margin-top:8px;">
+              NMID: ID102604589112 • Menerima Semua Bank & E-Wallet
+            </div>
+          </div>
+          <p style="font-size:0.7rem; color:var(--slate-muted);">
+            Setelah scan & bayar, silakan screenshot bukti pembayaran Anda lalu unggah di kolom <strong>Upload Bukti Transfer / QRIS</strong> pada halaman Keranjang.
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =======================================================================
+         STAGE ANIMASI BALON TERBANG & PECAH (BALLOON POP CELEBRATION)
+         ======================================================================= -->
+    <div class="balloon-celebration-overlay" id="balloonCelebrationStage"></div>
+
+
+    <!-- =======================================================================
+         TOAST NOTIFICATION COMPONENT
+         ======================================================================= -->
+    <div id="toastNotification" style="display:none; position:fixed; top:16px; left:50%; transform:translateX(-50%); background:#111827; color:#ffffff; padding:10px 18px; border-radius:var(--radius-full); border:1.5px solid var(--gold); font-size:0.76rem; font-weight:600; box-shadow:var(--shadow-lg); z-index:999; align-items:center; gap:8px; max-width:92vw;">
+      <i class="fa-solid fa-circle-check text-gold" id="toastIcon"></i>
+      <span id="toastMessage">Pemberitahuan Sistem</span>
+    </div>
+
+  </div>
+
+  <!-- Main Application Engine -->
+  <script src="app.js"></script>
+</body>
+</html>
