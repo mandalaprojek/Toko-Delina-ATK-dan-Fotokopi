@@ -1,0 +1,28 @@
+{
+  "name": "Toko Delina ATK & Fotokopi — Kiko Smart Stationery",
+  "short_name": "Toko Delina ATK",
+  "description": "Aplikasi Belanja ATK, Jasa Cetak & Fotokopi Online Resmi Toko Delina Tanjung Raja Kab. Ogan Ilir",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#0A5C36",
+  "orientation": "portrait-primary",
+  "lang": "id",
+  "dir": "ltr",
+  "categories": ["shopping", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "assets/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/kiko_mascot.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

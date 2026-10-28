@@ -7,6 +7,14 @@
   <meta name="description" content="Kiko POS & Smart Shop v2.1: Toko ATK & Fotokopi Syariah Modern di Tanjung Raja, Ogan Ilir. Jadwal Sholat, Cuaca, Dzikir Al-Matsurat, Asisten AI Kiko, & POS Hybrid.">
   <meta name="theme-color" content="#0A5C36">
 
+  <!-- PWA Meta Tags & Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Toko Delina">
+  <link rel="apple-touch-icon" href="assets/kiko_mascot.jpg">
+
   <!-- Favicon -->
   <link rel="icon" type="image/jpeg" href="assets/kiko_mascot.jpg">
 
@@ -308,19 +316,62 @@
             </div>
           </div>
 
-          <!-- Auto-Audio Azan Sungguhan Controller -->
-          <div class="audio-azan-panel">
-            <div>
-              <div style="font-weight:700;"><i class="fa-solid fa-volume-high text-gold"></i> Auto-Audio Suara Azan Ogan Ilir</div>
-              <div style="font-size:0.65rem; color:#713f12;" id="azanStatusText">Otomatis memutar suara azan saat waktu sholat tiba</div>
+          <!-- Auto-Audio Azan Sungguhan & Iqomah Controller (PRD & User Request) -->
+          <div class="audio-azan-panel-upgraded" id="audioAzanPanelUpgraded">
+            <div class="azan-panel-header">
+              <div class="azan-title-wrap">
+                <div class="azan-main-title">
+                  <i class="fa-solid fa-volume-high text-gold azan-pulsing-icon" id="azanSoundIcon"></i>
+                  <span>Audio Azan & Iqomah Asli (Kab. Ogan Ilir)</span>
+                </div>
+                <div class="azan-sub-status" id="azanStatusText">Siap memutar lantunan azan merdu & iqomah</div>
+              </div>
+
+              <!-- Pilihan Muadzin / Varian Azan -->
+              <div class="azan-select-wrap">
+                <select id="selectAzanType" class="azan-select-dropdown" aria-label="Pilih Jenis Azan">
+                  <option value="makkah" selected>🕌 Azan Makkah (Merdu)</option>
+                  <option value="subuh">🌅 Azan Subuh (Fajr)</option>
+                </select>
+              </div>
             </div>
-            <div style="display:flex; gap:6px;">
-              <button type="button" class="azan-toggle-btn" id="btnTestAzan">
-                <i class="fa-solid fa-play"></i> Putar Azan
+
+            <!-- Visualizer Bar / Status Player -->
+            <div class="azan-live-player-bar" id="azanPlayerBar">
+              <div class="azan-progress-track">
+                <div class="azan-progress-fill" id="azanProgressFill" style="width: 0%;"></div>
+              </div>
+              <div class="azan-player-meta">
+                <span class="azan-state-badge" id="azanStateBadge"><i class="fa-solid fa-circle-pause"></i> Siap Memutar</span>
+                <span class="azan-time-display" id="azanTimeDisplay">00:00 / --:--</span>
+              </div>
+            </div>
+
+            <!-- Tombol Kontrol: Putar Azan, Skip Iqomah, Auto Toggle, Doa -->
+            <div class="azan-control-actions">
+              <button type="button" class="azan-btn-primary" id="btnTestAzan">
+                <i class="fa-solid fa-play" id="btnTestAzanIcon"></i> <span id="btnTestAzanText">Putar Azan</span>
               </button>
-              <button type="button" class="azan-toggle-btn" id="btnMuteAzan" style="background:#475569;">
+              <button type="button" class="azan-btn-secondary" id="btnSkipToIqomah" title="Langsung putar suara Iqomah">
+                <i class="fa-solid fa-forward-step"></i> Lanjut Iqomah
+              </button>
+              <button type="button" class="azan-btn-outline" id="btnMuteAzan">
                 <i class="fa-solid fa-bell"></i> Auto: Aktif
               </button>
+              <button type="button" class="azan-btn-text" id="btnToggleDoaAzan" title="Lihat Teks Doa Setelah Azan">
+                <i class="fa-solid fa-book-open"></i> Doa Azan
+              </button>
+            </div>
+
+            <!-- Box Teks Doa Setelah Azan (Collapsible) -->
+            <div class="doa-azan-collapse" id="boxDoaSetelahAzan" style="display:none;">
+              <div class="doa-azan-header">
+                <span><i class="fa-solid fa-hands-praying text-gold"></i> Doa Setelah Mendengar Azan</span>
+                <button type="button" class="doa-close-mini" id="btnCloseDoaAzan"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+              <div class="doa-arabic">اللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ، وَالصَّلَاةِ الْقَائِمَةِ، آتِ مُحَمَّدًا الْوَسِيلَةَ وَالْفَضِيلَةَ، وَابْعَثْهُ مَقَامًا مَحْمُودًا الَّذِي وَعَدْتَهُ</div>
+              <div class="doa-latin">"Allahumma rabba hadzihid da’watit tammah, wash shalatil qa-imah, ati muhammadanil wasilata wal fadhilah, wab’atshu maqamam mahmudanil ladzi wa’adtah"</div>
+              <div class="doa-arti">Artinya: <em>"Ya Allah, Tuhan pemilik seruan yang sempurna ini dan shalat yang didirikan, berikanlah kepada Nabi Muhammad wasilah dan keutamaan, serta tempatkanlah beliau pada tempat terpuji yang telah Engkau janjikan."</em> (HR. Bukhari)</div>
             </div>
           </div>
         </div>
@@ -988,7 +1039,47 @@
             </button>
           </div>
 
-          <!-- Panel Akses Cepat Sistem Hybrid (Halaman Login 4 Tingkat, POS Kasir, & Owner CMS) -->
+          <!-- =======================================================================
+               PWA INSTALLATION BANNER: "Pasang Aplikasi Ini di Perangkat"
+               (Tampil tepat di bawah kolom profil / username Tab Akun / POS)
+               Fitur Standalone Detection, Service Worker Offline Cache, & Panduan Pasang
+               ======================================================================= -->
+          <div class="pwa-install-card glow-card-black" id="cardPwaInstall" style="background:#111827; border:2px solid #000; border-radius:var(--radius-lg); padding:14px 16px; margin-bottom:14px; color:#ffffff; position:relative; overflow:hidden;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:48px; height:48px; border-radius:12px; background:linear-gradient(135deg, #0A5C36, #0f5132); display:flex; align-items:center; justify-content:center; border:1.5px solid var(--gold); flex-shrink:0; box-shadow:0 4px 12px rgba(10,92,54,0.4);">
+                <i class="fa-solid fa-mobile-screen-button text-gold" style="font-size:1.4rem;"></i>
+              </div>
+              <div style="flex:1; min-width:0;">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                  <span style="font-size:0.9rem; font-weight:800; color:#fef08a;">Pasang Aplikasi Ini di Perangkat</span>
+                  <span class="pwa-badge-offline" style="background:rgba(10,92,54,0.35); color:#34d399; border:1px solid #059669; font-size:0.62rem; padding:1px 7px; border-radius:999px; font-weight:700;"><i class="fa-solid fa-bolt"></i> Siap Offline</span>
+                </div>
+                <div style="font-size:0.7rem; color:#cbd5e1; margin-top:2px;">
+                  Simpan Toko Delina di Home Screen HP / Laptop untuk akses cepat 1-klik tanpa perlu buka browser!
+                </div>
+              </div>
+            </div>
+
+            <!-- Bagian Tombol Pasang (Jika Belum Terpasang) -->
+            <div id="pwaNotInstalledSection" style="margin-top:12px; display:flex; align-items:center; gap:8px;">
+              <button type="button" class="btn-pwa-install-action" id="btnInstallPwaApp" style="flex:1; height:42px; background:linear-gradient(135deg, #0A5C36 0%, #15803d 100%); color:#ffffff; font-weight:800; font-size:0.8rem; border:1.5px solid var(--gold); border-radius:var(--radius-md); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 3px 12px rgba(10,92,54,0.5); transition:all 0.2s;">
+                <i class="fa-solid fa-download"></i> Pasang Aplikasi Ini di Perangkat (PWA)
+              </button>
+              <button type="button" class="btn-pwa-guide-trigger" id="btnPwaGuideModal" title="Panduan Pasang di iOS, Android, & Desktop" style="height:42px; width:42px; border-radius:var(--radius-md); background:#1f2937; border:1.5px solid #374151; color:#fef08a; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="fa-solid fa-circle-question" style="font-size:1.1rem;"></i>
+              </button>
+            </div>
+
+            <!-- Bagian Status Terpasang (Mode Standalone / Terpasang Aktif) -->
+            <div id="pwaAlreadyInstalledSection" style="margin-top:12px; display:none; background:rgba(10,92,54,0.3); border:1.5px solid var(--emerald); padding:10px 14px; border-radius:var(--radius-md); text-align:center;">
+              <div style="font-size:0.8rem; font-weight:800; color:#34d399; display:flex; align-items:center; justify-content:center; gap:6px;">
+                <i class="fa-solid fa-circle-check"></i> ✅ Aplikasi Sudah Terpasang di Perangkat Ini
+              </div>
+              <div style="font-size:0.68rem; color:#94a3b8; margin-top:2px;">
+                Mode Standalone Aktif • Anda dapat membuka aplikasi secara langsung dari Beranda Layar
+              </div>
+            </div>
+          </div>
           <div style="background:#ffffff; border:1.5px solid var(--gold); border-radius:var(--radius-lg); padding:14px; margin-bottom:14px; box-shadow:var(--shadow-sm);">
             <div style="font-size:0.8rem; font-weight:800; color:var(--primary-dark); margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
               <span><i class="fa-solid fa-sliders text-gold"></i> Modul Operasional & RBAC Toko Delina</span>
@@ -2059,6 +2150,120 @@
           <p style="font-size:0.7rem; color:var(--slate-muted);">
             Setelah scan & bayar, silakan screenshot bukti pembayaran Anda lalu unggah di kolom <strong>Upload Bukti Transfer / QRIS</strong> pada halaman Keranjang.
           </p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =======================================================================
+         MODAL PANDUAN CARA PASANG APLIKASI DI PERANGKAT (PWA GUIDE MODAL)
+         ======================================================================= -->
+    <div class="modal-overlay" id="modalPwaGuide">
+      <div class="modal-card" style="max-width:480px; border:2.5px solid #111827;">
+        <div class="sheet-header">
+          <span class="sheet-header-title">
+            <i class="fa-solid fa-mobile-screen-button text-gold"></i> Panduan Pasang Aplikasi (PWA)
+          </span>
+          <button type="button" class="sheet-close-btn" data-close="modalPwaGuide">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div style="padding:16px;">
+          <div style="text-align:center; margin-bottom:12px;">
+            <div style="font-size:0.9rem; font-weight:800; color:var(--primary-dark);">Pasang Toko Delina di Layar Utama HP / PC</div>
+            <div style="font-size:0.72rem; color:var(--slate-muted); margin-top:2px;">Bisa dibuka instan seperti aplikasi Play Store tanpa boros memori!</div>
+          </div>
+
+          <!-- Tab Platform -->
+          <div class="pwa-platform-tabs" style="display:flex; gap:6px; margin-bottom:14px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
+            <button type="button" class="pwa-tab-btn active" id="btnPwaTabAndroid" style="flex:1; padding:8px 4px; font-size:0.75rem; font-weight:700; border-radius:6px; border:none; background:var(--primary); color:#ffffff; cursor:pointer;">
+              <i class="fa-brands fa-android"></i> Android
+            </button>
+            <button type="button" class="pwa-tab-btn" id="btnPwaTabIos" style="flex:1; padding:8px 4px; font-size:0.75rem; font-weight:700; border-radius:6px; border:none; background:#f1f5f9; color:#475569; cursor:pointer;">
+              <i class="fa-brands fa-apple"></i> iPhone/iPad
+            </button>
+            <button type="button" class="pwa-tab-btn" id="btnPwaTabDesktop" style="flex:1; padding:8px 4px; font-size:0.75rem; font-weight:700; border-radius:6px; border:none; background:#f1f5f9; color:#475569; cursor:pointer;">
+              <i class="fa-solid fa-laptop"></i> PC / Laptop
+            </button>
+          </div>
+
+          <!-- Step Content Android -->
+          <div class="pwa-step-content" id="pwaStepAndroid">
+            <div class="pwa-step-item" style="display:flex; gap:10px; margin-bottom:10px; background:#f8fafc; padding:10px; border-radius:8px; border-left:3px solid var(--primary);">
+              <div style="font-weight:800; color:var(--primary); font-size:1rem;">1</div>
+              <div style="font-size:0.74rem; color:#334155;">
+                Klik tombol hijau <strong>"Pasang Aplikasi Ini di Perangkat"</strong> di Tab Akun / POS.
+              </div>
+            </div>
+            <div class="pwa-step-item" style="display:flex; gap:10px; margin-bottom:10px; background:#f8fafc; padding:10px; border-radius:8px; border-left:3px solid var(--primary);">
+              <div style="font-weight:800; color:var(--primary); font-size:1rem;">2</div>
+              <div style="font-size:0.74rem; color:#334155;">
+                Bila muncul jendela konfirmasi Google Chrome, pilih <strong>"Instal" / "Tambahkan"</strong>.
+              </div>
+            </div>
+            <div class="pwa-step-item" style="display:flex; gap:10px; background:#f8fafc; padding:10px; border-radius:8px; border-left:3px solid var(--gold);">
+              <div style="font-weight:800; color:var(--gold); font-size:1rem;">3</div>
+              <div style="font-size:0.74rem; color:#334155;">
+                Ikon Toko Delina akan otomatis muncul di Layar Depan HP Anda dan siap dibuka kapan saja!
+              </div>
+            </div>
+          </div>
+
+          <!-- Step Content iOS Safari -->
+          <div class="pwa-step-content" id="pwaStepIos" style="display:none;">
+            <div class="pwa-step-item" style="display:flex; gap:10px; margin-bottom:10px; background:#f8fafc; padding:10px; border-radius:8px; border-left:3px solid #2563eb;">
+              <div style="font-weight:800; color:#2563eb; font-size:1rem;">1</div>
+              <div style="font-size:0.74rem; color:#334155;">
+                Buka website Toko Delina menggunakan browser <strong>Safari</strong> di iPhone/iPad.
+              </div>
+            </div>
+            <div class="pwa-step-item" style="display:flex; gap:10px; margin-bottom:10px; background:#f8fafc; padding:10px; border-radius:8px; border-left:3px solid #2563eb;">
+              <div style="font-weight:800; color:#2563eb; font-size:1rem;">2</div>
+              <div style="font-size:0.74rem; color:#334155;">
+                Tekan tombol <strong>Bagikan (Share <i class="fa-solid fa-arrow-up-from-bracket"></i>)</strong> di bagian bawah layar Safari.
+              </div>
+            </div>
+            <div class="pwa-step-item" style="display:flex; gap:10px; margin-bottom:10px; background:#f8fafc; padding:10px; border-radius:8px; border-left:3px solid #2563eb;">
+              <div style="font-weight:800; color:#2563eb; font-size:1rem;">3</div>
+              <div style="font-size:0.74rem; color:#334155;">
+                Gulir ke bawah menu lalu pilih <strong>"Tambahkan ke Layar Utama" (Add to Home Screen)</strong>.
+              </div>
+            </div>
+            <div class="pwa-step-item" style="display:flex; gap:10px; background:#f8fafc; padding:10px; border-radius:8px; border-left:3px solid var(--gold);">
+              <div style="font-weight:800; color:var(--gold); font-size:1rem;">4</div>
+              <div style="font-size:0.74rem; color:#334155;">
+                Tekan tombol <strong>"Tambah"</strong> di pojok kanan atas. Selesai!
+              </div>
+            </div>
+          </div>
+
+          <!-- Step Content Desktop -->
+          <div class="pwa-step-content" id="pwaStepDesktop" style="display:none;">
+            <div class="pwa-step-item" style="display:flex; gap:10px; margin-bottom:10px; background:#f8fafc; padding:10px; border-radius:8px; border-left:3px solid #059669;">
+              <div style="font-weight:800; color:#059669; font-size:1rem;">1</div>
+              <div style="font-size:0.74rem; color:#334155;">
+                Gunakan browser Google Chrome atau Microsoft Edge di PC / Laptop.
+              </div>
+            </div>
+            <div class="pwa-step-item" style="display:flex; gap:10px; margin-bottom:10px; background:#f8fafc; padding:10px; border-radius:8px; border-left:3px solid #059669;">
+              <div style="font-weight:800; color:#059669; font-size:1rem;">2</div>
+              <div style="font-size:0.74rem; color:#334155;">
+                Klik tombol <strong>"Pasang Aplikasi Ini di Perangkat"</strong> atau klik ikon monitor kecil <strong>"Install Toko Delina"</strong> di sebelah kanan bilah alamat (URL bar).
+              </div>
+            </div>
+            <div class="pwa-step-item" style="display:flex; gap:10px; background:#f8fafc; padding:10px; border-radius:8px; border-left:3px solid var(--gold);">
+              <div style="font-weight:800; color:var(--gold); font-size:1rem;">3</div>
+              <div style="font-size:0.74rem; color:#334155;">
+                Aplikasi akan terbuka dalam jendela tersendiri tanpa gangguan tab browser lain.
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px; text-align:center;">
+            <button type="button" class="btn-sheet-add-cart" data-close="modalPwaGuide" style="height:38px; font-size:0.76rem;">
+              <i class="fa-solid fa-check"></i> Mengerti & Tutup Panduan
+            </button>
+          </div>
         </div>
       </div>
     </div>

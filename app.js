@@ -768,73 +768,227 @@ const ISLAMIC_QUOTES = {
 // =========================================================================================
 // AUDIO AZAN SYNTHESIZER (WEB AUDIO API — SUARA AZAN SUNGGUHAN OGAN ILIR)
 // =========================================================================================
-class AzanAudioSynthesizer {
+// AUDIO AZAN & IQOMAH SUNTOKHAN (MP3 ASLI) ENGINE
+// Makkah (Sheikh Ali Ahmed Mulla), Subuh Fajr, & Iqomah Berurutan Otomatis
+// =========================================================================================
+class AzanAndIqomahPlayer {
   constructor() {
-    this.audioCtx = null;
+    this.audio = new Audio();
+    this.currentMode = null; // 'AZAN' | 'IQOMAH' | null
     this.isPlaying = false;
+    this.currentTrackType = 'makkah'; // 'makkah' | 'subuh'
+
+    // Sumber audio lokal utama dan cadangan remote URL
+    this.tracks = {
+      makkah: {
+        title: 'Azan Makkah Merdu (Sheikh Ali Ahmed Mulla)',
+        src: 'assets/audio/adhan_makkah.mp3',
+        fallback: 'https://raw.githubusercontent.com/AalianKhan/adhans/master/adhan.mp3'
+      },
+      subuh: {
+        title: 'Azan Subuh Fajr (As-Shalatu Khairum Minan Naum)',
+        src: 'assets/audio/adhan_subuh.mp3',
+        fallback: 'https://raw.githubusercontent.com/AalianKhan/adhans/master/adhan_fajr.mp3'
+      },
+      iqamah: {
+        title: 'Iqomah Sholat Berjamaah',
+        src: 'assets/audio/iqamah.mp3',
+        fallback: 'https://archive.org/download/iqamah_201405/iqamah.mp3'
+      }
+    };
+
+    this.bindEvents();
   }
 
-  initContext() {
-    if (!this.audioCtx) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      this.audioCtx = new AudioContext();
-    }
-  }
-
-  playAzanChant() {
-    this.initContext();
-    if (this.audioCtx.state === "suspended") {
-      this.audioCtx.resume();
-    }
-
-    this.isPlaying = true;
-    showToast("🔊 Memutar Audio Azan Wilayah Tanjung Raja, Kab. Ogan Ilir...");
-
-    const melody = [
-      { note: 293.66, dur: 1.1 },
-      { note: 349.23, dur: 1.3 },
-      { note: 392.00, dur: 1.5 },
-      { note: 440.00, dur: 2.0 },
-      { note: 392.00, dur: 1.0 },
-      { note: 349.23, dur: 1.3 },
-      { note: 293.66, dur: 2.2 }
-    ];
-
-    let startTime = this.audioCtx.currentTime + 0.08;
-    melody.forEach(item => {
-      const osc1 = this.audioCtx.createOscillator();
-      const osc2 = this.audioCtx.createOscillator();
-      const gainNode = this.audioCtx.createGain();
-
-      osc1.type = "sine";
-      osc1.frequency.setValueAtTime(item.note, startTime);
-
-      osc2.type = "triangle";
-      osc2.frequency.setValueAtTime(item.note * 2, startTime);
-
-      gainNode.gain.setValueAtTime(0.001, startTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.24, startTime + 0.18);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + item.dur);
-
-      osc1.connect(gainNode);
-      osc2.connect(gainNode);
-      gainNode.connect(this.audioCtx.destination);
-
-      osc1.start(startTime);
-      osc2.start(startTime);
-      osc1.stop(startTime + item.dur);
-      osc2.stop(startTime + item.dur);
-
-      startTime += item.dur + 0.12;
+  bindEvents() {
+    this.audio.addEventListener('timeupdate', () => {
+      this.handleTimeUpdate();
     });
 
-    setTimeout(() => {
-      this.isPlaying = false;
-    }, (startTime - this.audioCtx.currentTime) * 1000);
+    this.audio.addEventListener('ended', () => {
+      this.handleAudioEnded();
+    });
+
+    this.audio.addEventListener('error', (e) => {
+      console.warn('[Audio Player] Gagal memuat audio lokal, mencoba fallback URL...', e);
+      if (this.currentMode === 'AZAN') {
+        const trk = this.tracks[this.currentTrackType];
+        if (this.audio.src !== trk.fallback) {
+          this.audio.src = trk.fallback;
+          this.audio.play().catch(err => console.warn('Fallback error:', err));
+        }
+      } else if (this.currentMode === 'IQOMAH') {
+        const trk = this.tracks.iqamah;
+        if (this.audio.src !== trk.fallback) {
+          this.audio.src = trk.fallback;
+          this.audio.play().catch(err => console.warn('Fallback error:', err));
+        }
+      }
+    });
+  }
+
+  formatTime(seconds) {
+    if (isNaN(seconds) || seconds < 0) return '00:00';
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
+
+  handleTimeUpdate() {
+    const cur = this.audio.currentTime || 0;
+    const dur = this.audio.duration || 0;
+    const fill = document.getElementById('azanProgressFill');
+    const timeDisplay = document.getElementById('azanTimeDisplay');
+
+    if (dur > 0 && fill) {
+      const pct = Math.min(100, Math.max(0, (cur / dur) * 100));
+      fill.style.width = `${pct}%`;
+    }
+    if (timeDisplay) {
+      timeDisplay.textContent = `${this.formatTime(cur)} / ${this.formatTime(dur)}`;
+    }
+  }
+
+  handleAudioEnded() {
+    if (this.currentMode === 'AZAN') {
+      // Azan selesai, otomatis lanjut ke Iqomah!
+      showToast('🕌 Azan selesai berkumandang. Lanjut mengumandangkan Iqomah...');
+      this.playIqomah();
+    } else if (this.currentMode === 'IQOMAH') {
+      // Iqomah selesai!
+      showToast('✅ Iqomah selesai. Luruskan & rapatkan shaf sholat!');
+      this.stopAudio();
+      const statusText = document.getElementById('azanStatusText');
+      const badge = document.getElementById('azanStateBadge');
+      if (statusText) statusText.textContent = 'Iqomah selesai. Selamat menunaikan ibadah sholat.';
+      if (badge) badge.innerHTML = '<i class="fa-solid fa-circle-check text-emerald"></i> Selesai';
+    }
+  }
+
+  playAzan(forcedType = null) {
+    const select = document.getElementById('selectAzanType');
+    if (forcedType && select) {
+      select.value = forcedType;
+    }
+    const type = select ? select.value : (forcedType || 'makkah');
+    this.currentTrackType = type;
+    this.currentMode = 'AZAN';
+    this.isPlaying = true;
+
+    const track = this.tracks[type] || this.tracks.makkah;
+    this.audio.src = track.src;
+    this.audio.load();
+
+    const playPromise = this.audio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        this.updateUIPlayingAzan(track.title);
+      }).catch(err => {
+        console.warn('[Audio Player] Autoplay was prevented or error:', err);
+        this.updateUIPlayingAzan(track.title);
+      });
+    }
+
+    showToast(`🔊 Memutar ${track.title}...`);
+  }
+
+  playIqomah() {
+    this.currentMode = 'IQOMAH';
+    this.isPlaying = true;
+    const track = this.tracks.iqamah;
+    this.audio.src = track.src;
+    this.audio.load();
+
+    const playPromise = this.audio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        this.updateUIPlayingIqomah();
+      }).catch(err => {
+        console.warn('[Audio Player] Autoplay prevented:', err);
+        this.updateUIPlayingIqomah();
+      });
+    }
+
+    showToast('🔔 Mengumandangkan Iqomah Sholat...');
+  }
+
+  stopAudio() {
+    this.isPlaying = false;
+    this.currentMode = null;
+    this.audio.pause();
+    this.audio.currentTime = 0;
+    this.resetUI();
+  }
+
+  togglePlay() {
+    if (this.isPlaying) {
+      this.stopAudio();
+      showToast('Audio dihentikan.');
+    } else {
+      this.playAzan();
+    }
+  }
+
+  updateUIPlayingAzan(title) {
+    const btn = document.getElementById('btnTestAzan');
+    const btnText = document.getElementById('btnTestAzanText');
+    const btnIcon = document.getElementById('btnTestAzanIcon');
+    const statusText = document.getElementById('azanStatusText');
+    const badge = document.getElementById('azanStateBadge');
+    const soundIcon = document.getElementById('azanSoundIcon');
+
+    if (btn) btn.classList.add('is-playing');
+    if (btnText) btnText.textContent = 'Hentikan Azan';
+    if (btnIcon) btnIcon.className = 'fa-solid fa-stop';
+    if (statusText) statusText.textContent = `Sedang berkumandang: ${title}`;
+    if (badge) badge.innerHTML = '<i class="fa-solid fa-volume-high text-emerald"></i> Memutar Azan';
+    if (soundIcon) soundIcon.classList.add('playing');
+  }
+
+  updateUIPlayingIqomah() {
+    const btn = document.getElementById('btnTestAzan');
+    const btnText = document.getElementById('btnTestAzanText');
+    const btnIcon = document.getElementById('btnTestAzanIcon');
+    const statusText = document.getElementById('azanStatusText');
+    const badge = document.getElementById('azanStateBadge');
+    const soundIcon = document.getElementById('azanSoundIcon');
+
+    if (btn) btn.classList.add('is-playing');
+    if (btnText) btnText.textContent = 'Hentikan Iqomah';
+    if (btnIcon) btnIcon.className = 'fa-solid fa-stop';
+    if (statusText) statusText.textContent = 'Mengumandangkan Iqomah... Qad qaamatis-shalaah!';
+    if (badge) badge.innerHTML = '<i class="fa-solid fa-bell text-gold"></i> Melantunkan Iqomah';
+    if (soundIcon) soundIcon.classList.add('playing');
+  }
+
+  resetUI() {
+    const btn = document.getElementById('btnTestAzan');
+    const btnText = document.getElementById('btnTestAzanText');
+    const btnIcon = document.getElementById('btnTestAzanIcon');
+    const statusText = document.getElementById('azanStatusText');
+    const badge = document.getElementById('azanStateBadge');
+    const soundIcon = document.getElementById('azanSoundIcon');
+    const fill = document.getElementById('azanProgressFill');
+    const timeDisplay = document.getElementById('azanTimeDisplay');
+
+    if (btn) btn.classList.remove('is-playing');
+    if (btnText) btnText.textContent = 'Putar Azan';
+    if (btnIcon) btnIcon.className = 'fa-solid fa-play';
+    if (statusText) statusText.textContent = 'Siap memutar lantunan azan merdu & iqomah';
+    if (badge) badge.innerHTML = '<i class="fa-solid fa-circle-pause"></i> Siap Memutar';
+    if (soundIcon) soundIcon.classList.remove('playing');
+    if (fill) fill.style.width = '0%';
+    if (timeDisplay) timeDisplay.textContent = '00:00 / --:--';
+  }
+
+  // Kompatibilitas mundur
+  playAzanChant() {
+    this.playAzan();
   }
 }
 
-const azanSynthesizer = new AzanAudioSynthesizer();
+const azanAudioPlayer = new AzanAndIqomahPlayer();
+const azanSynthesizer = azanAudioPlayer;
 
 // =========================================================================================
 // 0. HALAMAN LOGIN & PORTAL AUTENTIKASI 4 TINGKAT (RBAC GATEWAY)
@@ -1104,7 +1258,8 @@ function initRealTimeEngines() {
     pillSholatLabel.textContent = `${next.name} ${next.time}`;
 
     if (diffSecs === 0 && APP_STATE.autoAzanEnabled) {
-      azanSynthesizer.playAzanChant();
+      const azanType = (next.name && next.name.toLowerCase().includes("subuh")) ? "subuh" : "makkah";
+      azanAudioPlayer.playAzan(azanType);
     }
   }
 
@@ -1160,9 +1315,43 @@ function initHeaderDropdowns() {
     }
   });
 
-  document.getElementById("btnTestAzan").addEventListener("click", () => {
-    azanSynthesizer.playAzanChant();
-  });
+  const btnTestAzan = document.getElementById("btnTestAzan");
+  if (btnTestAzan) {
+    btnTestAzan.addEventListener("click", () => {
+      azanAudioPlayer.togglePlay();
+    });
+  }
+
+  const btnSkipToIqomah = document.getElementById("btnSkipToIqomah");
+  if (btnSkipToIqomah) {
+    btnSkipToIqomah.addEventListener("click", () => {
+      azanAudioPlayer.playIqomah();
+    });
+  }
+
+  const btnToggleDoaAzan = document.getElementById("btnToggleDoaAzan");
+  const boxDoa = document.getElementById("boxDoaSetelahAzan");
+  const btnCloseDoa = document.getElementById("btnCloseDoaAzan");
+  if (btnToggleDoaAzan && boxDoa) {
+    btnToggleDoaAzan.addEventListener("click", () => {
+      const isHidden = boxDoa.style.display === "none";
+      boxDoa.style.display = isHidden ? "block" : "none";
+    });
+  }
+  if (btnCloseDoa && boxDoa) {
+    btnCloseDoa.addEventListener("click", () => {
+      boxDoa.style.display = "none";
+    });
+  }
+
+  const selectAzanType = document.getElementById("selectAzanType");
+  if (selectAzanType) {
+    selectAzanType.addEventListener("change", (e) => {
+      if (azanAudioPlayer.isPlaying && azanAudioPlayer.currentMode === "AZAN") {
+        azanAudioPlayer.playAzan(e.target.value);
+      }
+    });
+  }
 
   const btnMuteAzan = document.getElementById("btnMuteAzan");
   btnMuteAzan.addEventListener("click", () => {
@@ -4075,6 +4264,121 @@ function initDarkModeAndTouchGlow() {
 }
 
 // =========================================================================================
+// PWA INSTALLER ENGINE (STANDALONE DETECTION, SERVICE WORKER, & PANDUAN MODAL)
+// =========================================================================================
+let deferredPwaPrompt = null;
+
+function initPwaInstaller() {
+  const btnInstall = document.getElementById("btnInstallPwaApp");
+  const btnGuide = document.getElementById("btnPwaGuideModal");
+  const notInstalledSec = document.getElementById("pwaNotInstalledSection");
+  const alreadyInstalledSec = document.getElementById("pwaAlreadyInstalledSection");
+  const modalGuide = document.getElementById("modalPwaGuide");
+
+  // Deteksi jika aplikasi sedang berjalan di mode standalone (sudah terpasang di layar utama / desktop)
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                       window.navigator.standalone === true ||
+                       (document.referrer && document.referrer.includes('android-app://'));
+
+  if (isStandalone) {
+    if (notInstalledSec) notInstalledSec.style.display = "none";
+    if (alreadyInstalledSec) alreadyInstalledSec.style.display = "block";
+  }
+
+  // Tangkap event instalasi browser modern (Android Chrome / Edge Desktop)
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPwaPrompt = e;
+    console.log("[PWA] Prompt instalasi dideteksi oleh browser.");
+    if (!isStandalone) {
+      if (notInstalledSec) notInstalledSec.style.display = "flex";
+      if (alreadyInstalledSec) alreadyInstalledSec.style.display = "none";
+    }
+  });
+
+  // Tombol aksi pasang aplikasi
+  if (btnInstall) {
+    btnInstall.addEventListener("click", async () => {
+      if (deferredPwaPrompt) {
+        deferredPwaPrompt.prompt();
+        const { outcome } = await deferredPwaPrompt.userChoice;
+        if (outcome === "accepted") {
+          showToast("✅ Alhamdulillah! Aplikasi Toko Delina berhasil dipasang di perangkat.");
+          if (notInstalledSec) notInstalledSec.style.display = "none";
+          if (alreadyInstalledSec) alreadyInstalledSec.style.display = "block";
+        } else {
+          showToast("Pemasangan aplikasi ditunda.");
+        }
+        deferredPwaPrompt = null;
+      } else {
+        // Tampilkan modal panduan jika browser tidak mendukung auto-prompt (seperti Safari iOS atau browser tertentu)
+        if (modalGuide) modalGuide.classList.add("open");
+      }
+    });
+  }
+
+  // Tombol buka panduan instalasi
+  if (btnGuide && modalGuide) {
+    btnGuide.addEventListener("click", () => {
+      modalGuide.classList.add("open");
+    });
+  }
+
+  // Tab switching di dalam Modal Panduan PWA (Android, iOS, Desktop)
+  const tabAndroid = document.getElementById("btnPwaTabAndroid");
+  const tabIos = document.getElementById("btnPwaTabIos");
+  const tabDesktop = document.getElementById("btnPwaTabDesktop");
+  const stepAndroid = document.getElementById("pwaStepAndroid");
+  const stepIos = document.getElementById("pwaStepIos");
+  const stepDesktop = document.getElementById("pwaStepDesktop");
+
+  function switchPwaTab(activeTab, activeStep) {
+    [tabAndroid, tabIos, tabDesktop].forEach(t => {
+      if (t) {
+        t.classList.remove("active");
+        t.style.background = "#f1f5f9";
+        t.style.color = "#475569";
+      }
+    });
+    [stepAndroid, stepIos, stepDesktop].forEach(s => {
+      if (s) s.style.display = "none";
+    });
+
+    if (activeTab) {
+      activeTab.classList.add("active");
+      activeTab.style.background = "var(--primary)";
+      activeTab.style.color = "#ffffff";
+    }
+    if (activeStep) {
+      activeStep.style.display = "block";
+    }
+  }
+
+  if (tabAndroid) {
+    tabAndroid.addEventListener("click", () => switchPwaTab(tabAndroid, stepAndroid));
+  }
+  if (tabIos) {
+    tabIos.addEventListener("click", () => switchPwaTab(tabIos, stepIos));
+  }
+  if (tabDesktop) {
+    tabDesktop.addEventListener("click", () => switchPwaTab(tabDesktop, stepDesktop));
+  }
+
+  // Registrasi Service Worker PWA untuk caching offline
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js")
+        .then(reg => {
+          console.log("[PWA Service Worker] Berhasil terdaftar dengan scope:", reg.scope);
+        })
+        .catch(err => {
+          console.warn("[PWA Service Worker] Gagal mendaftarkan service worker:", err);
+        });
+    });
+  }
+}
+
+// =========================================================================================
 // INITIALIZE APPLICATION ON DOM READY
 // =========================================================================================
 document.addEventListener("DOMContentLoaded", () => {
@@ -4095,4 +4399,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initPosAndOwnerModals();
   renderAccountOrderHistory();
   initBottomNavigation();
+  initPwaInstaller();
 });
