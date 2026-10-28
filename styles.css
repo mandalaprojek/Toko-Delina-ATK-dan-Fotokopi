@@ -3318,18 +3318,167 @@ body.dark-mode .pwa-tab-btn:not(.active) {
   color: #94a3b8 !important;
 }
 
+/* =========================================================================
+   SCANNER BARCODE SKU & CAMERA VIEWFINDER STYLES
+   ========================================================================= */
+.scanner-camera-viewport {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  height: 230px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000000;
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.35);
+}
+
+.scanner-overlay-frame {
+  position: absolute;
+  inset: 16px;
+  border: 1px dashed rgba(254, 240, 138, 0.4);
+  border-radius: 8px;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.scanner-laser-beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #ef4444;
+  box-shadow: 0 0 10px #ef4444, 0 0 18px #f43f5e;
+  animation: scannerLaserMove 1.8s ease-in-out infinite;
+}
+
+@keyframes scannerLaserMove {
+  0% { top: 5%; opacity: 0.6; }
+  50% { top: 92%; opacity: 1; }
+  100% { top: 5%; opacity: 0.6; }
+}
+
+.scanner-corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: #fef08a;
+  border-style: solid;
+}
+.corner-tl { top: 0; left: 0; border-width: 3px 0 0 3px; border-top-left-radius: 6px; }
+.corner-tr { top: 0; right: 0; border-width: 3px 3px 0 0; border-top-right-radius: 6px; }
+.corner-bl { bottom: 0; left: 0; border-width: 0 0 3px 3px; border-bottom-left-radius: 6px; }
+.corner-br { bottom: 0; right: 0; border-width: 0 3px 3px 0; border-bottom-right-radius: 6px; }
+
+.scanner-status-pill {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(17, 24, 39, 0.88);
+  color: #fef08a;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.quick-scan-pill {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #1e293b;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.quick-scan-pill:hover,
+.quick-scan-pill:active {
+  background: var(--gold-gradient);
+  border-color: #111827;
+  color: #111827;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.quick-barcode-modal-btn {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 6px 8px;
+  color: #ffffff;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.quick-barcode-modal-btn:hover {
+  border-color: var(--gold);
+  background: #1e293b;
+  transform: translateY(-1px);
+}
+
+.row-scanned-pulse {
+  animation: rowPulseGreen 1.2s ease-out;
+}
+
+@keyframes rowPulseGreen {
+  0% { background-color: rgba(34, 197, 94, 0.35); }
+  50% { background-color: rgba(212, 175, 55, 0.25); }
+  100% { background-color: transparent; }
+}
+
+.barcode-printable-card {
+  background: #ffffff;
+  border: 1.5px solid #111827;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  color: #111827;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+body.dark-mode .pos-quick-scan-strip {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+body.dark-mode .quick-scan-pill {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: #475569 !important;
+}
+
+body.dark-mode .quick-scan-pill:hover {
+  background: var(--gold-gradient) !important;
+  color: #111827 !important;
+}
+
 @media print {
   body * {
     visibility: hidden;
   }
-  #printableSpjDoc, #printableSpjDoc * {
+  #printableSpjDoc, #printableSpjDoc *,
+  #printableBarcodeSection, #printableBarcodeSection * {
     visibility: visible;
   }
-  #printableSpjDoc {
+  #printableSpjDoc,
+  #printableBarcodeSection {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     border: none;
+    background: #ffffff !important;
   }
 }

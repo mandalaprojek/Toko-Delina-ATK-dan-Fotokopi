@@ -131,6 +131,8 @@ function callGasBackend(action, payload, callback) {
 const MASTER_PRODUCTS = [
   {
     id: "PRD-001",
+    sku: "ATK-HVS-A480",
+    barcode: "8991389200101",
     name: "Kertas HVS Sinar Dunia PaperOne A4 80gsm",
     category: "kertas",
     brand: "Sinar Dunia / PaperOne",
@@ -144,7 +146,8 @@ const MASTER_PRODUCTS = [
     image: "assets/product_hvs.jpg",
     alternativeId: "PRD-002",
     specs: {
-      "Kode / Barcode": "PRD-001 (89913892001)",
+      "Kode / Barcode": "PRD-001 (8991389200101)",
+      "SKU Toko": "ATK-HVS-A480",
       "Merk / Brand": "Sinar Dunia (SiDU) PaperOne Original",
       "Ukuran Kertas": "A4 (210 x 297 mm)",
       "Ketebalan / Gramatur": "80 GSM (Super White 98% & Tebal)",
@@ -160,6 +163,8 @@ const MASTER_PRODUCTS = [
   },
   {
     id: "PRD-002",
+    sku: "ATK-HVS-A470",
+    barcode: "8991389200202",
     name: "Kertas HVS Sinar Dunia A4 70gsm SiDU",
     category: "kertas",
     brand: "Sinar Dunia (SiDU)",
@@ -173,7 +178,8 @@ const MASTER_PRODUCTS = [
     image: "assets/product_hvs.jpg",
     alternativeId: "PRD-001",
     specs: {
-      "Kode / Barcode": "PRD-002 (89913892002)",
+      "Kode / Barcode": "PRD-002 (8991389200202)",
+      "SKU Toko": "ATK-HVS-A470",
       "Merk / Brand": "Sinar Dunia (SiDU)",
       "Ukuran Kertas": "A4 (210 x 297 mm)",
       "Ketebalan / Gramatur": "70 GSM",
@@ -187,6 +193,8 @@ const MASTER_PRODUCTS = [
   },
   {
     id: "PRD-003",
+    sku: "ATK-HVS-F470",
+    barcode: "8991389200303",
     name: "Kertas Folio F4 70gsm Sinar Dunia",
     category: "kertas",
     brand: "Sinar Dunia (SiDU)",
@@ -200,7 +208,8 @@ const MASTER_PRODUCTS = [
     image: "assets/product_hvs.jpg",
     alternativeId: "PRD-001",
     specs: {
-      "Kode / Barcode": "PRD-003 (89913892003)",
+      "Kode / Barcode": "PRD-003 (8991389200303)",
+      "SKU Toko": "ATK-HVS-F470",
       "Merk / Brand": "Sinar Dunia (SiDU)",
       "Ukuran Kertas": "F4 / Folio Resmi (215 x 330 mm)",
       "Gramatur": "70 GSM",
@@ -214,6 +223,8 @@ const MASTER_PRODUCTS = [
   },
   {
     id: "PRD-004",
+    sku: "ATK-PEN-PLTG2",
+    barcode: "8991389200404",
     name: "Pulpen Pilot Ballliner G2 0.5mm Hitam",
     category: "alat-tulis",
     brand: "Pilot Japan",
@@ -227,7 +238,8 @@ const MASTER_PRODUCTS = [
     image: "assets/product_hvs.jpg",
     alternativeId: "PRD-005",
     specs: {
-      "Kode / Barcode": "PRD-004",
+      "Kode / Barcode": "PRD-004 (8991389200404)",
+      "SKU Toko": "ATK-PEN-PLTG2",
       "Merk": "Pilot Original",
       "Ukuran Mata Pena": "0.5 mm Extra Smooth Gel",
       "Warna Tinta": "Hitam Pekat Anti-Luntur",
@@ -240,6 +252,8 @@ const MASTER_PRODUCTS = [
   },
   {
     id: "PRD-005",
+    sku: "ATK-PEN-AE7",
+    barcode: "8991389200505",
     name: "Pulpen Standard AE7 0.5mm Hitam (Best Seller)",
     category: "alat-tulis",
     brand: "Standard",
@@ -253,7 +267,8 @@ const MASTER_PRODUCTS = [
     image: "assets/product_hvs.jpg",
     alternativeId: "PRD-004",
     specs: {
-      "Kode / Barcode": "PRD-005",
+      "Kode / Barcode": "PRD-005 (8991389200505)",
+      "SKU Toko": "ATK-PEN-AE7",
       "Merk": "Standard AE7 Alfa",
       "Tip": "0.5 mm Oil Gel",
       "Isi Kemasan": "1 Lusin (12 Pcs)",
@@ -266,6 +281,8 @@ const MASTER_PRODUCTS = [
   },
   {
     id: "PRD-006",
+    sku: "ATK-BK-DBLF",
+    barcode: "8991389200606",
     name: "Kertas Folio Bergaris Double Folio SiDU",
     category: "kertas",
     brand: "Sinar Dunia (SiDU)",
@@ -279,7 +296,8 @@ const MASTER_PRODUCTS = [
     image: "assets/product_hvs.jpg",
     alternativeId: "PRD-007",
     specs: {
-      "Kode / Barcode": "PRD-006",
+      "Kode / Barcode": "PRD-006 (8991389200606)",
+      "SKU Toko": "ATK-BK-DBLF",
       "Merk": "Sinar Dunia (SiDU)",
       "Ukuran": "Double Folio Bergaris",
       "Status Stok": "HABIS / SOLD OUT (0 Pack)",
@@ -292,6 +310,8 @@ const MASTER_PRODUCTS = [
   },
   {
     id: "PRD-007",
+    sku: "ATK-BK-GLTK",
+    barcode: "8991389200707",
     name: "Kertas Folio Bergaris Gelatik Kembar (Alternatif Ready)",
     category: "kertas",
     brand: "Gelatik Kembar",
@@ -305,7 +325,8 @@ const MASTER_PRODUCTS = [
     image: "assets/product_hvs.jpg",
     alternativeId: null,
     specs: {
-      "Kode / Barcode": "PRD-007",
+      "Kode / Barcode": "PRD-007 (8991389200707)",
+      "SKU Toko": "ATK-BK-GLTK",
       "Merk": "Gelatik Kembar Original",
       "Ukuran": "Double Folio Bergaris Presisi",
       "Isi Kemasan": "100 Lembar / Pack",
@@ -318,6 +339,8 @@ const MASTER_PRODUCTS = [
   },
   {
     id: "PRD-008",
+    sku: "JSA-SKR-SPRL",
+    barcode: "8991389200808",
     name: "Paket Cetak Skripsi & Jilid Spiral Kawat Mewah",
     category: "cetak",
     brand: "Layanan Cetak Toko Delina",
@@ -331,6 +354,8 @@ const MASTER_PRODUCTS = [
     image: "assets/print_review.jpg",
     alternativeId: null,
     specs: {
+      "Kode / Barcode": "PRD-008 (8991389200808)",
+      "SKU Toko": "JSA-SKR-SPRL",
       "ID Layanan": "SRV-008",
       "Jenis": "Jilid Spiral Kawat + Cover Mika & Buffalo",
       "Estimasi Pengerjaan": "15 – 30 Menit Selesai",
@@ -343,6 +368,8 @@ const MASTER_PRODUCTS = [
   },
   {
     id: "PRD-009",
+    sku: "ATK-STP-JK107",
+    barcode: "8991389200909",
     name: "Joyko Binder Clip No. 107 & Stapler HD-10 Set",
     category: "kantor",
     brand: "Joyko",
@@ -356,7 +383,8 @@ const MASTER_PRODUCTS = [
     image: "assets/product_hvs.jpg",
     alternativeId: null,
     specs: {
-      "Kode / Barcode": "PRD-009",
+      "Kode / Barcode": "PRD-009 (8991389200909)",
+      "SKU Toko": "ATK-STP-JK107",
       "Merk": "Joyko Original",
       "Isi Paket": "1 Kotak Binder Clip 107 + 1 Stapler HD-10",
       "Material": "Baja Anti-Karat Kuat"
@@ -368,6 +396,8 @@ const MASTER_PRODUCTS = [
   },
   {
     id: "PRD-010",
+    sku: "TNT-PRN-003",
+    barcode: "8991389201000",
     name: "Tinta Printer Epson 003 / Canon GI-790 Original",
     category: "tinta",
     brand: "Epson / Canon",
@@ -381,7 +411,8 @@ const MASTER_PRODUCTS = [
     image: "assets/product_hvs.jpg",
     alternativeId: null,
     specs: {
-      "Kode / Barcode": "PRD-010",
+      "Kode / Barcode": "PRD-010 (8991389201000)",
+      "SKU Toko": "TNT-PRN-003",
       "Kemasan": "Botol 70 ml Segel Resmi",
       "Pilihan Warna": "Black, Cyan, Magenta, Yellow",
       "Jaminan": "100% Original Aman untuk Printhead"
@@ -989,6 +1020,81 @@ class AzanAndIqomahPlayer {
 
 const azanAudioPlayer = new AzanAndIqomahPlayer();
 const azanSynthesizer = azanAudioPlayer;
+
+// =========================================================================================
+// CASHIER BEEP SOUND FX ENGINE & BARCODE SVG GENERATOR
+// Audio Synthesizer Kasir Otomatis (Web Audio API) & Visual Barcode Code128
+// =========================================================================================
+function playCashierBeep(isSuccess = true) {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    if (ctx.state === "suspended") ctx.resume();
+
+    if (isSuccess) {
+      // Bunyi BEEP tajam khas mesin kasir retail supermarket (2100 Hz, 80 ms)
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(2100, ctx.currentTime);
+      gain.gain.setValueAtTime(0.001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.28, ctx.currentTime + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.08);
+    } else {
+      // Bunyi BEEP-BEEP ganda bernada rendah (400 Hz) tanda barcode tidak terdaftar
+      [0, 0.12].forEach(delay => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "square";
+        osc.frequency.setValueAtTime(400, ctx.currentTime + delay);
+        gain.gain.setValueAtTime(0.001, ctx.currentTime + delay);
+        gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + delay + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.09);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + delay);
+        osc.stop(ctx.currentTime + delay + 0.09);
+      });
+    }
+  } catch (err) {
+    console.warn("[Cashier Beep FX] Audio context notice:", err);
+  }
+}
+
+function generateBarcodeSvg(code, width = 180, height = 55) {
+  const cleanCode = String(code || "").trim();
+  let barBits = "101"; // start guard
+  for (let i = 0; i < cleanCode.length; i++) {
+    const charCode = cleanCode.charCodeAt(i);
+    const pattern = [
+      "11011001100", "11001101100", "11001100110", "10010011000",
+      "10010001100", "10001001100", "10011001000", "10011000100",
+      "10001100100", "11001001000"
+    ][(charCode + i) % 10];
+    barBits += pattern;
+  }
+  barBits += "101011"; // stop guard
+
+  const barWidth = width / barBits.length;
+  let rects = "";
+  for (let j = 0; j < barBits.length; j++) {
+    if (barBits[j] === "1") {
+      rects += `<rect x="${(j * barWidth).toFixed(1)}" y="0" width="${Math.max(1, barWidth).toFixed(1)}" height="${height - 18}" fill="#111827"/>`;
+    }
+  }
+
+  return `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" style="background:#ffffff; display:block; margin:0 auto;">
+      ${rects}
+      <text x="${width / 2}" y="${height - 2}" font-family="'Courier New', monospace" font-size="11" font-weight="bold" text-anchor="middle" fill="#111827">${cleanCode}</text>
+    </svg>
+  `;
+}
 
 // =========================================================================================
 // 0. HALAMAN LOGIN & PORTAL AUTENTIKASI 4 TINGKAT (RBAC GATEWAY)
@@ -1634,15 +1740,17 @@ function initProductCatalog() {
     renderGrid();
   });
 
-  document.getElementById("btnTriggerBarcode").addEventListener("click", () => {
-    showToast("📷 Memindai Barcode Barang ATK...");
-    setTimeout(() => {
-      searchInput.value = "PaperOne";
-      searchQuery = "PaperOne";
-      renderGrid();
-      showToast("✅ Barcode 89913892001 Terdeteksi: Kertas HVS Sinar Dunia PaperOne A4 80gsm!");
-    }, 900);
-  });
+  const btnTriggerBarcode = document.getElementById("btnTriggerBarcode");
+  if (btnTriggerBarcode) {
+    btnTriggerBarcode.addEventListener("click", () => {
+      const modalScanner = document.getElementById("modalBarcodeScanner");
+      if (modalScanner) {
+        modalScanner.classList.add("open");
+        const btnOpenCam = document.getElementById("btnOpenBarcodeCam");
+        if (btnOpenCam) btnOpenCam.click();
+      }
+    });
+  }
 
   renderGrid();
 }
@@ -2962,13 +3070,16 @@ function initPosAndOwnerModals() {
   const changeEl = document.getElementById("posCashChange");
   const paymentMethodSelect = document.getElementById("posPaymentMethod");
 
-  function addProductToPosCart(prod) {
+  function addProductToPosCart(prod, isFromScan = false) {
     if (!prod) return;
     if (prod.stock === 0 && prod.category !== "cetak") {
+      playCashierBeep(false);
       const alt = MASTER_PRODUCTS.find(p => p.id === prod.alternativeId) || MASTER_PRODUCTS[6];
-      showToast(`⚠️ Stok "${prod.name}" habis (0)! Gunakan alternatif: ${alt ? alt.name : "Produk Lain"}`);
+      showToast(`⚠️ Stok "${prod.name}" habis (0)! Disarankan alternatif: ${alt ? alt.name : "Produk Lain"}`);
       return;
     }
+
+    playCashierBeep(true);
     const existing = APP_STATE.posCart.find(item => item.id === prod.id);
     if (existing) {
       existing.qty += 1;
@@ -2976,13 +3087,92 @@ function initPosAndOwnerModals() {
       APP_STATE.posCart.push({
         id: prod.id,
         name: prod.name,
+        sku: prod.sku || prod.id,
+        barcode: prod.barcode || "",
         price: prod.priceEceran,
         qty: 1
       });
     }
+
     renderPosCart();
-    showToast(`+1 ${prod.name} masuk keranjang Kasir POS`);
+    renderPosVisualCatalog();
+
+    const currentQty = existing ? existing.qty : 1;
+    if (isFromScan) {
+      showToast(`✅ [${prod.sku || prod.id}] ${prod.name} discan (+1, Total: ${currentQty}x)`);
+    } else {
+      showToast(`+1 ${prod.name} masuk keranjang Kasir POS (Total: ${currentQty}x)`);
+    }
+
+    // Efek visual pulse highlight baris keranjang yang discan
+    setTimeout(() => {
+      const rowEl = document.getElementById(`pos-cart-row-${prod.id}`);
+      if (rowEl) {
+        rowEl.classList.remove("row-scanned-pulse");
+        void rowEl.offsetWidth; // trigger reflow
+        rowEl.classList.add("row-scanned-pulse");
+        rowEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }, 50);
   }
+
+  function handleBarcodeScanResult(rawQuery) {
+    if (!rawQuery) return;
+    const q = String(rawQuery).trim().toLowerCase();
+    if (!q) return;
+
+    // Pencarian menyeluruh: barcode EAN, SKU, ID produk, atau nama barang
+    const found = MASTER_PRODUCTS.find(p => {
+      const barcodeMatch = p.barcode && p.barcode.toLowerCase() === q;
+      const skuMatch = p.sku && p.sku.toLowerCase() === q;
+      const idMatch = p.id && p.id.toLowerCase() === q;
+      const nameMatch = p.name && p.name.toLowerCase().includes(q);
+      const specMatch = p.specs && p.specs["Kode / Barcode"] && p.specs["Kode / Barcode"].toLowerCase().includes(q);
+      return barcodeMatch || skuMatch || idMatch || nameMatch || specMatch;
+    });
+
+    if (found) {
+      addProductToPosCart(found, true);
+      if (posSearchInput) posSearchInput.value = "";
+    } else {
+      playCashierBeep(false);
+      showToast(`❌ Barcode "${rawQuery}" tidak terdaftar di Master Produk Delina!`);
+    }
+  }
+
+  // GLOBAL HARDWARE BARCODE SCANNER GUN LISTENER (USB / Bluetooth Wireless)
+  let hwBarcodeBuffer = "";
+  let hwLastKeyTime = Date.now();
+
+  window.addEventListener("keydown", (e) => {
+    // Hanya tangkap jika Modal POS Kasir sedang terbuka
+    if (!modalPos || !modalPos.classList.contains("open")) return;
+
+    // Abaikan jika fokus pada input selain posBarcodeQuery
+    const activeEl = document.activeElement;
+    if (activeEl && activeEl.tagName === "INPUT" && activeEl.id !== "posBarcodeQuery") {
+      return;
+    }
+
+    const now = Date.now();
+    const diff = now - hwLastKeyTime;
+    hwLastKeyTime = now;
+
+    if (e.key === "Enter") {
+      if (hwBarcodeBuffer.length >= 3) {
+        e.preventDefault();
+        console.log("[Hardware Barcode Gun] Kode terbaca:", hwBarcodeBuffer);
+        handleBarcodeScanResult(hwBarcodeBuffer);
+        hwBarcodeBuffer = "";
+      }
+    } else if (e.key.length === 1) {
+      if (diff > 250) {
+        hwBarcodeBuffer = e.key;
+      } else {
+        hwBarcodeBuffer += e.key;
+      }
+    }
+  });
 
   function renderPosVisualCatalog() {
     if (!posCatalogGrid) return;
@@ -2993,7 +3183,7 @@ function initPosAndOwnerModals() {
 
     const filtered = MASTER_PRODUCTS.filter(p => {
       const matchCat = cat === "all" || p.category === cat;
-      const matchQ = !q || p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q) || (p.brand && p.brand.toLowerCase().includes(q));
+      const matchQ = !q || p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q) || (p.brand && p.brand.toLowerCase().includes(q)) || (p.sku && p.sku.toLowerCase().includes(q)) || (p.barcode && p.barcode.includes(q));
       return matchCat && matchQ;
     });
 
@@ -3010,6 +3200,7 @@ function initPosAndOwnerModals() {
       card.innerHTML = `
         <img src="${prod.image || "assets/product_hvs.jpg"}" alt="${prod.name}" class="pos-item-thumb">
         <div class="pos-item-title">${prod.name}</div>
+        <div style="font-size:0.62rem; color:var(--slate-muted); font-family:var(--font-mono); margin:1px 0;">${prod.sku || prod.id}</div>
         <div class="pos-item-meta">
           <span class="pos-item-price">Rp ${activePrice.toLocaleString("id-ID")}</span>
           <span class="pos-item-stock" style="color:${isOut ? "#dc2626" : "#64748b"}; font-weight:${isOut ? "800" : "600"};">
@@ -3029,7 +3220,7 @@ function initPosAndOwnerModals() {
     let total = 0;
 
     if (APP_STATE.posCart.length === 0) {
-      posCartList.innerHTML = `<div style="text-align:center; padding:12px; font-size:0.72rem; color:var(--slate-muted);">Keranjang kasir kosong. Klik kartu produk di atas untuk menambah barang.</div>`;
+      posCartList.innerHTML = `<div style="text-align:center; padding:12px; font-size:0.72rem; color:var(--slate-muted);">Keranjang kasir kosong. Klik kartu produk di atas atau scan barcode barang.</div>`;
     }
 
     APP_STATE.posCart.forEach((item, idx) => {
@@ -3039,18 +3230,22 @@ function initPosAndOwnerModals() {
       total += sub;
 
       const row = document.createElement("div");
-      row.style.cssText = "display:flex; justify-content:space-between; align-items:center; font-size:0.74rem; padding:6px 0; border-bottom:1px solid #f1f5f9; gap:6px;";
+      row.id = `pos-cart-row-${item.id}`;
+      row.style.cssText = "display:flex; justify-content:space-between; align-items:center; font-size:0.74rem; padding:6px 6px; border-bottom:1px solid #f1f5f9; gap:6px; border-radius:4px; transition:background-color 0.3s;";
       row.innerHTML = `
         <div style="flex:1; min-width:0;">
           <div style="font-weight:700; color:var(--charcoal); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.name}</div>
-          <div style="font-size:0.65rem; color:var(--slate-muted);">@ Rp ${unitPrice.toLocaleString("id-ID")}</div>
+          <div style="font-size:0.65rem; color:var(--slate-muted); display:flex; align-items:center; gap:5px;">
+            <span style="font-family:var(--font-mono); background:#f1f5f9; padding:1px 5px; border-radius:3px; color:#475569; font-weight:700;">${master ? (master.sku || master.id) : item.id}</span>
+            <span>@ Rp ${unitPrice.toLocaleString("id-ID")}</span>
+          </div>
         </div>
         <div style="display:flex; align-items:center; gap:4px;">
-          <button type="button" class="btn-mini-action" data-minus="${idx}">-</button>
-          <strong style="font-family:var(--font-mono); min-width:20px; text-align:center;">${item.qty}</strong>
-          <button type="button" class="btn-mini-action" data-plus="${idx}">+</button>
+          <button type="button" class="btn-mini-action" data-minus="${idx}" title="Kurangi 1">-</button>
+          <strong style="font-family:var(--font-mono); min-width:22px; text-align:center;">${item.qty}</strong>
+          <button type="button" class="btn-mini-action" data-plus="${idx}" title="Tambah 1">+</button>
           <strong style="font-family:var(--font-mono); min-width:68px; text-align:right; color:var(--primary-dark);">Rp ${sub.toLocaleString("id-ID")}</strong>
-          <button type="button" class="btn-mini-action danger" data-del="${idx}">x</button>
+          <button type="button" class="btn-mini-action danger" data-del="${idx}" title="Hapus">×</button>
         </div>
       `;
       row.querySelector("[data-minus]").addEventListener("click", () => {
@@ -3122,28 +3317,248 @@ function initPosAndOwnerModals() {
     });
   }
 
-  const btnPosAdd = document.getElementById("btnPosAddItem");
-  if (btnPosAdd) {
-    btnPosAdd.addEventListener("click", () => {
-      const q = posSearchInput.value.trim().toLowerCase();
-      const found = MASTER_PRODUCTS.find(p => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q)) || MASTER_PRODUCTS[0];
-      addProductToPosCart(found);
-      posSearchInput.value = "";
-      renderPosVisualCatalog();
-    });
-  }
   if (posSearchInput) {
     posSearchInput.addEventListener("keydown", e => {
       if (e.key === "Enter") {
         e.preventDefault();
-        const q = posSearchInput.value.trim().toLowerCase();
-        const found = MASTER_PRODUCTS.find(p => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q));
-        if (found) {
-          addProductToPosCart(found);
-          posSearchInput.value = "";
-          renderPosVisualCatalog();
+        const q = posSearchInput.value.trim();
+        handleBarcodeScanResult(q);
+      }
+    });
+  }
+
+  // -------------------------------------------------------------------------
+  // C. SCANNER KAMERA LIVE (WEBCAM / HP) & GENERATOR LABEL BARCODE
+  // -------------------------------------------------------------------------
+  const modalScanner = document.getElementById("modalBarcodeScanner");
+  const btnOpenCam = document.getElementById("btnOpenBarcodeCam");
+  const btnTorch = document.getElementById("btnToggleCameraTorch");
+  const btnSwitchFacing = document.getElementById("btnSwitchCameraFacing");
+  const btnSimulateCam = document.getElementById("btnSimulateCameraBarcodeHit");
+  const modalBarcodeLabels = document.getElementById("modalBarcodeLabels");
+  const btnOpenLabels = document.getElementById("btnOpenBarcodeLabelModal");
+  const btnPrintStickers = document.getElementById("btnPrintBarcodeStickersAction");
+  const quickPillsContainer = document.getElementById("quickScanPillsContainer");
+  const modalQuickGrid = document.getElementById("modalQuickBarcodeGrid");
+
+  let cameraMediaStream = null;
+  let nativeBarcodeDetector = null;
+  let isCamScanning = false;
+  let currentCamFacing = "environment";
+  let torchActive = false;
+
+  async function startLiveCameraScanner() {
+    const video = document.getElementById("barcodeVideoFeed");
+    const statusPill = document.getElementById("scannerCameraStatus");
+    if (!video) return;
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      if (statusPill) statusPill.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-gold"></i> Browser tidak mendukung akses kamera langsung. Silakan gunakan Tombol Barcode Contoh di bawah.';
+      return;
+    }
+
+    try {
+      if (statusPill) statusPill.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menghubungkan Kamera...';
+      if (cameraMediaStream) {
+        cameraMediaStream.getTracks().forEach(t => t.stop());
+      }
+
+      cameraMediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: currentCamFacing, width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false
+      });
+
+      video.srcObject = cameraMediaStream;
+      await video.play();
+      isCamScanning = true;
+      if (statusPill) statusPill.innerHTML = '<i class="fa-solid fa-laser"></i> Kamera Aktif — Arahkan Barcode ke Garis Laser Merah';
+
+      // BarcodeDetector native check
+      if ("BarcodeDetector" in window) {
+        try {
+          nativeBarcodeDetector = new window.BarcodeDetector({
+            formats: ["ean_13", "code_128", "qr_code", "code_39", "upc_a", "ean_8"]
+          });
+          loopCameraFrameScanner();
+        } catch (e) {
+          console.warn("BarcodeDetector init:", e);
         }
       }
+    } catch (err) {
+      console.warn("[Camera Scanner] Izin kamera atau device:", err);
+      if (statusPill) {
+        statusPill.innerHTML = '<i class="fa-solid fa-circle-info text-gold"></i> Kamera tidak aktif. Anda dapat mengklik Barcode Contoh di bawah!';
+      }
+    }
+  }
+
+  function stopLiveCameraScanner() {
+    isCamScanning = false;
+    if (cameraMediaStream) {
+      cameraMediaStream.getTracks().forEach(t => t.stop());
+      cameraMediaStream = null;
+    }
+    const video = document.getElementById("barcodeVideoFeed");
+    if (video) video.srcObject = null;
+  }
+
+  let lastCamScanTime = 0;
+  async function loopCameraFrameScanner() {
+    if (!isCamScanning || !nativeBarcodeDetector) return;
+    const video = document.getElementById("barcodeVideoFeed");
+    if (video && video.readyState >= 2) {
+      try {
+        const barcodes = await nativeBarcodeDetector.detect(video);
+        if (barcodes && barcodes.length > 0) {
+          const now = Date.now();
+          if (now - lastCamScanTime > 1500) {
+            lastCamScanTime = now;
+            const code = barcodes[0].rawValue;
+            handleBarcodeScanResult(code);
+          }
+        }
+      } catch (e) {}
+    }
+    if (isCamScanning) {
+      requestAnimationFrame(loopCameraFrameScanner);
+    }
+  }
+
+  if (btnOpenCam && modalScanner) {
+    btnOpenCam.addEventListener("click", () => {
+      modalScanner.classList.add("open");
+      startLiveCameraScanner();
+    });
+  }
+
+  // Tutup kamera saat modal scanner ditutup
+  document.querySelectorAll('[data-close="modalBarcodeScanner"]').forEach(el => {
+    el.addEventListener("click", () => {
+      if (modalScanner) modalScanner.classList.remove("open");
+      stopLiveCameraScanner();
+    });
+  });
+
+  if (btnTorch) {
+    btnTorch.addEventListener("click", async () => {
+      if (!cameraMediaStream) return;
+      const track = cameraMediaStream.getVideoTracks()[0];
+      if (track && typeof track.applyConstraints === "function") {
+        try {
+          torchActive = !torchActive;
+          await track.applyConstraints({ advanced: [{ torch: torchActive }] });
+          btnTorch.style.background = torchActive ? "var(--gold)" : "#374151";
+          btnTorch.style.color = torchActive ? "#111827" : "#ffffff";
+          showToast(torchActive ? "Flash kamera dinyalakan." : "Flash kamera dimatikan.");
+        } catch (e) {
+          showToast("Flash senter tidak didukung pada kamera ini.");
+        }
+      }
+    });
+  }
+
+  if (btnSwitchFacing) {
+    btnSwitchFacing.addEventListener("click", () => {
+      currentCamFacing = currentCamFacing === "environment" ? "user" : "environment";
+      startLiveCameraScanner();
+    });
+  }
+
+  if (btnSimulateCam) {
+    btnSimulateCam.addEventListener("click", () => {
+      const sampleList = MASTER_PRODUCTS.filter(p => p.stock > 0);
+      const randomProd = sampleList[Math.floor(Math.random() * sampleList.length)];
+      handleBarcodeScanResult(randomProd.barcode || randomProd.sku);
+    });
+  }
+
+  // RENDER BILAH TOMBOL CEPAT BARCODE UJI COBA (RAPID TEST STRIP)
+  const testSampleProducts = [
+    MASTER_PRODUCTS[0], // PaperOne A4 80g
+    MASTER_PRODUCTS[1], // SiDU A4 70g
+    MASTER_PRODUCTS[4], // Standard AE7
+    MASTER_PRODUCTS[3], // Pilot G2
+    MASTER_PRODUCTS[8], // Joyko Stapler
+    MASTER_PRODUCTS[9]  // Tinta Epson 003
+  ].filter(Boolean);
+
+  if (quickPillsContainer) {
+    quickPillsContainer.innerHTML = "";
+    testSampleProducts.forEach(prod => {
+      const pill = document.createElement("button");
+      pill.type = "button";
+      pill.className = "quick-scan-pill";
+      pill.title = `Scan Barcode: ${prod.barcode} (${prod.sku})`;
+      pill.innerHTML = `<i class="fa-solid fa-barcode text-gold"></i> ${prod.name.split(" ")[0]} ${prod.name.split(" ")[1] || ""}`;
+      pill.addEventListener("click", () => {
+        handleBarcodeScanResult(prod.barcode || prod.sku);
+      });
+      quickPillsContainer.appendChild(pill);
+    });
+  }
+
+  if (modalQuickGrid) {
+    modalQuickGrid.innerHTML = "";
+    testSampleProducts.forEach(prod => {
+      const cardBtn = document.createElement("button");
+      cardBtn.type = "button";
+      cardBtn.className = "quick-barcode-modal-btn";
+      cardBtn.innerHTML = `
+        <div style="font-weight:700; font-size:0.7rem; color:#fef08a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+          <i class="fa-solid fa-barcode text-gold"></i> ${prod.name}
+        </div>
+        <div style="font-size:0.62rem; color:#94a3b8; font-family:var(--font-mono); margin-top:2px;">
+          ${prod.barcode} • ${prod.sku}
+        </div>
+        <div style="font-size:0.64rem; color:#34d399; font-weight:700; margin-top:2px;">
+          Rp ${prod.priceEceran.toLocaleString("id-ID")} (+1 Scan)
+        </div>
+      `;
+      cardBtn.addEventListener("click", () => {
+        handleBarcodeScanResult(prod.barcode || prod.sku);
+      });
+      modalQuickGrid.appendChild(cardBtn);
+    });
+  }
+
+  // RENDER MODAL GENERATOR & CETAK LABEL BARCODE
+  function renderBarcodeLabelsGrid() {
+    const grid = document.getElementById("barcodeLabelsGrid");
+    if (!grid) return;
+    grid.innerHTML = "";
+
+    MASTER_PRODUCTS.forEach(prod => {
+      const card = document.createElement("div");
+      card.className = "barcode-printable-card";
+      card.innerHTML = `
+        <div style="font-size:0.65rem; font-weight:800; color:var(--primary-dark); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px;">
+          Toko Delina ATK Tanjung Raja
+        </div>
+        <div style="font-size:0.74rem; font-weight:800; color:#111827; line-height:1.2; height:28px; overflow:hidden; margin-bottom:4px;">
+          ${prod.name}
+        </div>
+        <div style="margin:4px 0;">
+          ${generateBarcodeSvg(prod.barcode || prod.sku, 170, 52)}
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.65rem; font-weight:700; margin-top:4px; border-top:1px dashed #cbd5e1; padding-top:4px;">
+          <span style="color:#64748b; font-family:var(--font-mono);">${prod.sku}</span>
+          <span style="color:var(--primary-dark); font-size:0.75rem;">Rp ${prod.priceEceran.toLocaleString("id-ID")}</span>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  if (btnOpenLabels && modalBarcodeLabels) {
+    btnOpenLabels.addEventListener("click", () => {
+      modalBarcodeLabels.classList.add("open");
+      renderBarcodeLabelsGrid();
+    });
+  }
+
+  if (btnPrintStickers) {
+    btnPrintStickers.addEventListener("click", () => {
+      window.print();
     });
   }
 

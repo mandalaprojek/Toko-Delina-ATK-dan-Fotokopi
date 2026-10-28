@@ -1622,9 +1622,9 @@
               <span><strong>Cara Pakai Kasir:</strong> Klik langsung barang/jasa di bawah untuk memasukkan ke nota kasir, lalu pilih uang diterima & cetak struk!</span>
             </div>
 
-            <!-- Filter Kategori & Pencarian Cepat di POS Kasir -->
-            <div style="display:flex; gap:6px; margin-bottom:8px;">
-              <select class="search-input" id="posCatalogCatFilter" style="padding:7px 10px; width:42%; font-size:0.74rem; font-weight:700;">
+            <!-- Filter Kategori & Toolbar Scan SKU Barcode POS -->
+            <div style="display:flex; gap:6px; margin-bottom:6px; flex-wrap:wrap;">
+              <select class="search-input" id="posCatalogCatFilter" style="padding:7px 10px; min-width:130px; flex:1; font-size:0.74rem; font-weight:700;">
                 <option value="all">Semua Kategori</option>
                 <option value="kertas">Kertas & Buku</option>
                 <option value="alat-tulis">Alat Tulis</option>
@@ -1632,10 +1632,24 @@
                 <option value="kantor">Alat Kantor</option>
                 <option value="tinta">Tinta Printer</option>
               </select>
-              <input type="text" class="search-input" id="posBarcodeQuery" placeholder="Cari Nama Barang / Scan Barcode..." style="padding:7px 10px; flex:1; font-size:0.75rem;">
-              <button type="button" class="btn-spj-download" id="btnPosAddItem" style="white-space:nowrap; padding:0 10px;">
-                <i class="fa-solid fa-barcode"></i> + Scan
+              <div style="position:relative; flex:2; min-width:180px;">
+                <input type="text" class="search-input" id="posBarcodeQuery" placeholder="Scan Barcode EAN/SKU atau cari..." style="padding:7px 32px 7px 10px; width:100%; font-size:0.75rem; font-family:var(--font-mono);">
+                <i class="fa-solid fa-barcode text-gold" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); pointer-events:none;"></i>
+              </div>
+              <button type="button" class="btn-sheet-add-cart" id="btnOpenBarcodeCam" style="height:36px; padding:0 12px; font-size:0.72rem; white-space:nowrap; background:linear-gradient(135deg, #0A5C36, #15803d); border:1.5px solid var(--gold);" title="Buka Pemindai Barcode Kamera Langsung">
+                <i class="fa-solid fa-camera"></i> Scan Kamera
               </button>
+              <button type="button" class="btn-spj-download" id="btnOpenBarcodeLabelModal" style="height:36px; padding:0 10px; font-size:0.72rem; white-space:nowrap; background:#111827; color:#fef08a; border:1px solid var(--gold);" title="Lihat & Cetak Label Barcode SKU">
+                <i class="fa-solid fa-print"></i> Label SKU
+              </button>
+            </div>
+
+            <!-- Bilah Cepat Uji Coba Barcode 1-Klik (Rapid Test Strip) -->
+            <div class="pos-quick-scan-strip" id="posQuickScanStrip" style="margin-bottom:8px; background:#f1f5f9; padding:6px 8px; border-radius:var(--radius-sm); border:1px dashed #cbd5e1; display:flex; align-items:center; gap:6px; overflow-x:auto;">
+              <span style="font-size:0.65rem; font-weight:800; color:var(--primary-dark); white-space:nowrap;">
+                <i class="fa-solid fa-bolt text-gold"></i> Tes Cepat Barcode:
+              </span>
+              <div id="quickScanPillsContainer" style="display:flex; gap:5px; flex-wrap:nowrap;"></div>
             </div>
 
             <!-- GRID KATALOG BARANG VISUAL DI POS KASIR (Tinggal Klik!) -->
@@ -2262,6 +2276,120 @@
           <div style="margin-top:14px; text-align:center;">
             <button type="button" class="btn-sheet-add-cart" data-close="modalPwaGuide" style="height:38px; font-size:0.76rem;">
               <i class="fa-solid fa-check"></i> Mengerti & Tutup Panduan
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =======================================================================
+         MODAL 1: PEMINDAI BARCODE KAMERA LANGSUNG (LIVE WEBCAM / HP SCANNER)
+         Dilengkapi Garis Laser Merah, Deteksi Otomatis, & Tombol Barcode Uji Coba
+         ======================================================================= -->
+    <div class="modal-overlay" id="modalBarcodeScanner">
+      <div class="modal-card" style="max-width:440px; border:2.5px solid #111827; background:#111827; color:#ffffff;">
+        <div class="sheet-header" style="border-bottom:1px solid #374151; padding:12px 16px;">
+          <span class="sheet-header-title" style="color:#fef08a;">
+            <i class="fa-solid fa-barcode text-gold"></i> Pemindai Barcode SKU Kamera POS
+          </span>
+          <button type="button" class="sheet-close-btn" data-close="modalBarcodeScanner" style="color:#ffffff;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div style="padding:16px; text-align:center;">
+          <!-- Jendela Bidik Kamera Live (Camera Viewport) -->
+          <div class="scanner-camera-viewport" id="scannerCameraViewport">
+            <video id="barcodeVideoFeed" playsinline autoplay muted style="width:100%; height:230px; object-fit:cover; border-radius:10px; background:#000; display:block;"></video>
+            
+            <!-- Bingkai Laser Pemindai Bercahaya -->
+            <div class="scanner-overlay-frame">
+              <div class="scanner-laser-beam"></div>
+              <div class="scanner-corner corner-tl"></div>
+              <div class="scanner-corner corner-tr"></div>
+              <div class="scanner-corner corner-bl"></div>
+              <div class="scanner-corner corner-br"></div>
+            </div>
+
+            <!-- Status Kamera & Petunjuk Arah -->
+            <div class="scanner-status-pill" id="scannerCameraStatus">
+              <i class="fa-solid fa-camera"></i> Mengaktifkan Kamera...
+            </div>
+          </div>
+
+          <!-- Tombol Kontrol Kamera & Deteksi Cepat -->
+          <div style="display:flex; justify-content:center; gap:6px; margin:12px 0; flex-wrap:wrap;">
+            <button type="button" class="azan-toggle-btn" id="btnToggleCameraTorch" style="background:#374151; font-size:0.7rem;">
+              <i class="fa-solid fa-bolt"></i> Flash / Senter
+            </button>
+            <button type="button" class="azan-toggle-btn" id="btnSwitchCameraFacing" style="background:#374151; font-size:0.7rem;">
+              <i class="fa-solid fa-camera-rotate"></i> Putar Kamera
+            </button>
+            <button type="button" class="azan-toggle-btn" id="btnSimulateCameraBarcodeHit" style="background:var(--gold-gradient); color:#111827; font-weight:800; font-size:0.7rem;" title="Simulasi deteksi barcode kamera dengan audio beep kasir">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Deteksi Otomatis (Demo)
+            </button>
+          </div>
+
+          <!-- Palet Tombol Barcode Uji Coba Cepat di dalam Modal -->
+          <div style="text-align:left; background:#1e293b; padding:10px 12px; border-radius:8px; border:1px solid #334155;">
+            <div style="font-size:0.72rem; font-weight:700; color:#fef08a; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+              <span><i class="fa-solid fa-tag"></i> Barcode Contoh (Klik untuk Scan):</span>
+              <span style="font-size:0.62rem; color:#34d399; font-weight:700;"><i class="fa-solid fa-plus"></i> Akumulasi Qty</span>
+            </div>
+            <div class="quick-barcode-grid" id="modalQuickBarcodeGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+              <!-- Otomatis diisi oleh app.js -->
+            </div>
+          </div>
+
+          <div style="margin-top:12px;">
+            <button type="button" class="btn-sheet-add-cart" data-close="modalBarcodeScanner" style="height:36px; font-size:0.74rem;">
+              <i class="fa-solid fa-check"></i> Selesai Memindai
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =======================================================================
+         MODAL 2: GENERATOR & CETAK LABEL BARCODE SKU TOKO DELINA
+         Visual Barcode Garis Code128 / EAN untuk Stiker Rak Barang Toko
+         ======================================================================= -->
+    <div class="modal-overlay" id="modalBarcodeLabels">
+      <div class="modal-card" style="max-width:680px; border:2.5px solid #111827;">
+        <div class="sheet-header">
+          <span class="sheet-header-title">
+            <i class="fa-solid fa-barcode text-gold"></i> Cetak Label Barcode & SKU Produk
+          </span>
+          <button type="button" class="sheet-close-btn" data-close="modalBarcodeLabels">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div style="padding:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+            <div>
+              <div style="font-size:0.86rem; font-weight:800; color:var(--primary-dark);">Label Barcode Resmi Toko Delina</div>
+              <div style="font-size:0.7rem; color:var(--slate-muted);">Siap dicetak ke printer stiker barcode thermal atau kertas label rak.</div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button type="button" class="btn-sheet-add-cart" id="btnPrintBarcodeStickersAction" style="height:36px; font-size:0.74rem;">
+                <i class="fa-solid fa-print"></i> Cetak Stiker Sekarang (Print)
+              </button>
+            </div>
+          </div>
+
+          <!-- Printable Container -->
+          <div id="printableBarcodeSection" style="max-height:420px; overflow-y:auto; border:1px solid #e2e8f0; border-radius:8px; padding:12px; background:#f8fafc;">
+            <div id="barcodeLabelsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:12px;">
+              <!-- Diisi otomatis barcode card SVG oleh app.js -->
+            </div>
+          </div>
+
+          <div style="margin-top:12px; text-align:right;">
+            <button type="button" class="azan-toggle-btn" data-close="modalBarcodeLabels" style="background:#475569;">
+              Tutup Jendela
             </button>
           </div>
         </div>
