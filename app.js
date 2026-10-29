@@ -1023,9 +1023,35 @@ const azanSynthesizer = azanAudioPlayer;
 
 // =========================================================================================
 // CASHIER BEEP SOUND FX ENGINE & BARCODE SVG GENERATOR
-// Audio Synthesizer Kasir Otomatis (Web Audio API) & Visual Barcode Code128
+// Audio Synthesizer Kasir Otomatis (WAV PCM Audio + Web Audio API Fallback)
 // =========================================================================================
+let cashierAudioBeep = null;
+let cashierAudioError = null;
+try {
+  cashierAudioBeep = new Audio("assets/audio/cashier_beep.wav");
+  cashierAudioBeep.preload = "auto";
+  cashierAudioError = new Audio("assets/audio/cashier_error.wav");
+  cashierAudioError.preload = "auto";
+} catch (e) {}
+
 function playCashierBeep(isSuccess = true) {
+  try {
+    const audio = isSuccess ? cashierAudioBeep : cashierAudioError;
+    if (audio) {
+      audio.currentTime = 0;
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          playCashierBeepWebAudio(isSuccess);
+        });
+        return;
+      }
+    }
+  } catch (err) {}
+  playCashierBeepWebAudio(isSuccess);
+}
+
+function playCashierBeepWebAudio(isSuccess = true) {
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (!AudioContext) return;
@@ -3097,6 +3123,14 @@ function initPosAndOwnerModals() {
     renderPosCart();
     renderPosVisualCatalog();
 
+    // Efek visual pulse menyala pada Banner Live Counter di bagian atas
+    const liveBanner = document.getElementById("posLiveCartBanner");
+    if (liveBanner) {
+      liveBanner.classList.remove("banner-scanned-pulse");
+      void liveBanner.offsetWidth; // trigger reflow
+      liveBanner.classList.add("banner-scanned-pulse");
+    }
+
     const currentQty = existing ? existing.qty : 1;
     if (isFromScan) {
       showToast(`✅ [${prod.sku || prod.id}] ${prod.name} discan (+1, Total: ${currentQty}x)`);
@@ -3132,11 +3166,12 @@ function initPosAndOwnerModals() {
     });
 
     if (found) {
-      addProductToPosCart(found, true);
+      // Kosongkan kolom pencarian agar katalog visual mereset menampilkan seluruh barang dengan badge
       if (posSearchInput) posSearchInput.value = "";
+      addProductToPosCart(found, true);
     } else {
       playCashierBeep(false);
-      showToast(`❌ Barcode "${rawQuery}" tidak terdaftar di Master Produk Delina!`);
+      showToast(`❌ Barcode / SKU "${rawQuery}" tidak terdaftar di Master Produk Delina!`);
     }
   }
 
@@ -3195,9 +3230,11 @@ function initPosAndOwnerModals() {
     filtered.forEach(prod => {
       const activePrice = isSpj ? prod.priceGrosir : prod.priceEceran;
       const isOut = prod.stock === 0 && prod.category !== "cetak";
+      const inCart = APP_STATE.posCart.find(item => item.id === prod.id);
       const card = document.createElement("div");
       card.className = `pos-item-card ${isOut ? "out-of-stock" : ""}`;
       card.innerHTML = `
+        ${inCart ? `<span class="pos-item-cart-badge"><i class="fa-solid fa-cart-shopping"></i> ${inCart.qty} di Nota</span>` : ""}
         <img src="${prod.image || "assets/product_hvs.jpg"}" alt="${prod.name}" class="pos-item-thumb">
         <div class="pos-item-title">${prod.name}</div>
         <div style="font-size:0.62rem; color:var(--slate-muted); font-family:var(--font-mono); margin:1px 0;">${prod.sku || prod.id}</div>
@@ -3252,14 +3289,17 @@ function initPosAndOwnerModals() {
         if (item.qty > 1) item.qty -= 1;
         else APP_STATE.posCart.splice(idx, 1);
         renderPosCart();
+        renderPosVisualCatalog();
       });
       row.querySelector("[data-plus]").addEventListener("click", () => {
         item.qty += 1;
         renderPosCart();
+        renderPosVisualCatalog();
       });
       row.querySelector("[data-del]").addEventListener("click", () => {
         APP_STATE.posCart.splice(idx, 1);
         renderPosCart();
+        renderPosVisualCatalog();
       });
       posCartList.appendChild(row);
     });
@@ -3268,6 +3308,21 @@ function initPosAndOwnerModals() {
     const received = parseInt(cashInput.value, 10) || 0;
     const diff = received - total;
     changeEl.textContent = diff >= 0 ? `Rp ${diff.toLocaleString("id-ID")}` : `Kurang Rp ${Math.abs(diff).toLocaleString("id-ID")}`;
+
+    // Sinkronisasi Live Counter Banner di bagian atas POS
+    const totalItems = APP_STATE.posCart.length;
+    const totalPcs = APP_STATE.posCart.reduce((sum, item) => sum + item.qty, 0);
+    const liveCartCountBadge = document.getElementById("posCartItemCountBadge");
+    const liveTotalBanner = document.getElementById("posLiveTotalBanner");
+    if (liveCartCountBadge) {
+      liveCartCountBadge.textContent = totalItems === 0
+        ? "Nota Kasir: Kosong (0 Pcs)"
+        : `Nota Kasir: ${totalItems} Barang (${totalPcs} Pcs)`;
+    }
+    if (liveTotalBanner) {
+      liveTotalBanner.textContent = `Rp ${total.toLocaleString("id-ID")}`;
+    }
+
     return total;
   }
 
@@ -3313,7 +3368,24 @@ function initPosAndOwnerModals() {
     btnClearPosCart.addEventListener("click", () => {
       APP_STATE.posCart = [];
       renderPosCart();
+      renderPosVisualCatalog();
       showToast("🗑️ Keranjang Kasir POS dikosongkan.");
+    });
+  }
+
+  // Tombol + Masukkan Barcode / SKU
+  const btnSubmitBarcode = document.getElementById("btnPosSubmitBarcode");
+  if (btnSubmitBarcode) {
+    btnSubmitBarcode.addEventListener("click", () => {
+      if (posSearchInput) {
+        const q = posSearchInput.value.trim();
+        if (q) {
+          handleBarcodeScanResult(q);
+        } else {
+          showToast("Ketik Barcode / SKU terlebih dahulu atau klik salah satu chip uji coba di bawah!");
+          posSearchInput.focus();
+        }
+      }
     });
   }
 
@@ -3322,7 +3394,9 @@ function initPosAndOwnerModals() {
       if (e.key === "Enter") {
         e.preventDefault();
         const q = posSearchInput.value.trim();
-        handleBarcodeScanResult(q);
+        if (q) {
+          handleBarcodeScanResult(q);
+        }
       }
     });
   }
@@ -3474,22 +3548,22 @@ function initPosAndOwnerModals() {
 
   // RENDER BILAH TOMBOL CEPAT BARCODE UJI COBA (RAPID TEST STRIP)
   const testSampleProducts = [
-    MASTER_PRODUCTS[0], // PaperOne A4 80g
-    MASTER_PRODUCTS[1], // SiDU A4 70g
-    MASTER_PRODUCTS[4], // Standard AE7
-    MASTER_PRODUCTS[3], // Pilot G2
-    MASTER_PRODUCTS[8], // Joyko Stapler
-    MASTER_PRODUCTS[9]  // Tinta Epson 003
-  ].filter(Boolean);
+    { prod: MASTER_PRODUCTS[0], label: "PaperOne A4" },
+    { prod: MASTER_PRODUCTS[1], label: "SiDU A4 70g" },
+    { prod: MASTER_PRODUCTS[4], label: "Pulpen Standard" },
+    { prod: MASTER_PRODUCTS[3], label: "Pilot G2" },
+    { prod: MASTER_PRODUCTS[8], label: "Stapler Joyko" },
+    { prod: MASTER_PRODUCTS[9], label: "Tinta Epson 003" }
+  ].filter(item => Boolean(item.prod));
 
   if (quickPillsContainer) {
     quickPillsContainer.innerHTML = "";
-    testSampleProducts.forEach(prod => {
+    testSampleProducts.forEach(({ prod, label }) => {
       const pill = document.createElement("button");
       pill.type = "button";
       pill.className = "quick-scan-pill";
       pill.title = `Scan Barcode: ${prod.barcode} (${prod.sku})`;
-      pill.innerHTML = `<i class="fa-solid fa-barcode text-gold"></i> ${prod.name.split(" ")[0]} ${prod.name.split(" ")[1] || ""}`;
+      pill.innerHTML = `<i class="fa-solid fa-barcode text-gold"></i> ${label}`;
       pill.addEventListener("click", () => {
         handleBarcodeScanResult(prod.barcode || prod.sku);
       });
@@ -3499,13 +3573,13 @@ function initPosAndOwnerModals() {
 
   if (modalQuickGrid) {
     modalQuickGrid.innerHTML = "";
-    testSampleProducts.forEach(prod => {
+    testSampleProducts.forEach(({ prod, label }) => {
       const cardBtn = document.createElement("button");
       cardBtn.type = "button";
       cardBtn.className = "quick-barcode-modal-btn";
       cardBtn.innerHTML = `
         <div style="font-weight:700; font-size:0.7rem; color:#fef08a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-          <i class="fa-solid fa-barcode text-gold"></i> ${prod.name}
+          <i class="fa-solid fa-barcode text-gold"></i> ${label} (${prod.name})
         </div>
         <div style="font-size:0.62rem; color:#94a3b8; font-family:var(--font-mono); margin-top:2px;">
           ${prod.barcode} • ${prod.sku}

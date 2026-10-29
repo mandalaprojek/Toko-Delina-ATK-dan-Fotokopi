@@ -1633,10 +1633,13 @@
                 <option value="tinta">Tinta Printer</option>
               </select>
               <div style="position:relative; flex:2; min-width:180px;">
-                <input type="text" class="search-input" id="posBarcodeQuery" placeholder="Scan Barcode EAN/SKU atau cari..." style="padding:7px 32px 7px 10px; width:100%; font-size:0.75rem; font-family:var(--font-mono);">
+                <input type="text" class="search-input" id="posBarcodeQuery" placeholder="Ketik Barcode / SKU / Nama lalu Enter..." style="padding:7px 32px 7px 10px; width:100%; font-size:0.75rem; font-family:var(--font-mono);">
                 <i class="fa-solid fa-barcode text-gold" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); pointer-events:none;"></i>
               </div>
-              <button type="button" class="btn-sheet-add-cart" id="btnOpenBarcodeCam" style="height:36px; padding:0 12px; font-size:0.72rem; white-space:nowrap; background:linear-gradient(135deg, #0A5C36, #15803d); border:1.5px solid var(--gold);" title="Buka Pemindai Barcode Kamera Langsung">
+              <button type="button" class="btn-sheet-add-cart" id="btnPosSubmitBarcode" style="height:36px; padding:0 12px; font-size:0.72rem; white-space:nowrap; background:#0A5C36; color:#ffffff; border:1.5px solid var(--gold);" title="Masukkan Barcode ke Nota Kasir">
+                <i class="fa-solid fa-arrow-turn-down fa-rotate-90"></i> + Masukkan
+              </button>
+              <button type="button" class="btn-sheet-add-cart" id="btnOpenBarcodeCam" style="height:36px; padding:0 10px; font-size:0.72rem; white-space:nowrap; background:linear-gradient(135deg, #15803d, #166534); border:1.5px solid var(--gold);" title="Buka Pemindai Barcode Kamera Langsung">
                 <i class="fa-solid fa-camera"></i> Scan Kamera
               </button>
               <button type="button" class="btn-spj-download" id="btnOpenBarcodeLabelModal" style="height:36px; padding:0 10px; font-size:0.72rem; white-space:nowrap; background:#111827; color:#fef08a; border:1px solid var(--gold);" title="Lihat & Cetak Label Barcode SKU">
@@ -1650,6 +1653,23 @@
                 <i class="fa-solid fa-bolt text-gold"></i> Tes Cepat Barcode:
               </span>
               <div id="quickScanPillsContainer" style="display:flex; gap:5px; flex-wrap:nowrap;"></div>
+            </div>
+
+            <!-- Banner Ringkasan Nota Kasir & Live Counter (Tampak Jelas di Atas) -->
+            <div id="posLiveCartBanner" style="background:linear-gradient(135deg, #0A5C36 0%, #0f5132 100%); color:#ffffff; padding:8px 12px; border-radius:var(--radius-md); border:1.5px solid var(--gold); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 8px rgba(10,92,54,0.3); transition:all 0.3s;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:34px; height:34px; border-radius:50%; background:#111827; border:1.5px solid var(--gold); display:flex; align-items:center; justify-content:center; color:#fef08a; font-size:0.9rem; flex-shrink:0;">
+                  <i class="fa-solid fa-receipt"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.8rem; font-weight:800; color:#fef08a;" id="posCartItemCountBadge">Nota Kasir: 2 Barang (3 Pcs)</div>
+                  <div style="font-size:0.65rem; color:#d1fae5;">Setiap scan bertambah otomatis ke nota kasir</div>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.62rem; color:#d1fae5;">Total Tagihan:</div>
+                <div style="font-family:var(--font-mono); font-size:1.1rem; font-weight:800; color:#facc15;" id="posLiveTotalBanner">Rp 140.000</div>
+              </div>
             </div>
 
             <!-- GRID KATALOG BARANG VISUAL DI POS KASIR (Tinggal Klik!) -->

@@ -3438,6 +3438,44 @@ body.dark-mode .pwa-tab-btn:not(.active) {
   100% { background-color: transparent; }
 }
 
+.banner-scanned-pulse {
+  animation: bannerPulseGold 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bannerPulseGold {
+  0% { transform: scale(1.025); box-shadow: 0 0 18px rgba(212, 175, 55, 0.9); border-color: #facc15; }
+  50% { transform: scale(1.01); box-shadow: 0 0 10px rgba(10, 92, 54, 0.7); }
+  100% { transform: scale(1); box-shadow: 0 2px 8px rgba(10,92,54,0.3); }
+}
+
+.pos-item-card {
+  position: relative;
+}
+
+.pos-item-cart-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #111827;
+  color: #fef08a;
+  border: 1.5px solid var(--gold);
+  border-radius: 9999px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 1px 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  animation: popBadge 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 2;
+}
+
+@keyframes popBadge {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 .barcode-printable-card {
   background: #ffffff;
   border: 1.5px solid #111827;

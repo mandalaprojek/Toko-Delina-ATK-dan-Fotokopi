@@ -17,7 +17,9 @@ const PRECACHE_ASSETS = [
   './assets/loyalty_gift.jpg',
   './assets/audio/adhan_makkah.mp3',
   './assets/audio/adhan_subuh.mp3',
-  './assets/audio/iqamah.mp3'
+  './assets/audio/iqamah.mp3',
+  './assets/audio/cashier_beep.wav',
+  './assets/audio/cashier_error.wav'
 ];
 
 self.addEventListener('install', (event) => {
